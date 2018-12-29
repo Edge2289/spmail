@@ -1,0 +1,140 @@
+{include file="public/header"}
+<body>
+	<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">运营管理</a>
+        <a>
+          <cite>客服管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" id="UserShuaxin" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <br>
+<blockquote class="layui-elem-quote layui-text">
+<span style="color:#00bcff;">操作提示</span><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;客服管理,可设置微信、QQ, 由平台设置管理.</span>
+</blockquote>
+<br>
+
+
+<table class="layui-table layui-form" style="width: 98%;margin: 10px auto;">
+ <tr>
+    <td colspan="11">
+  <button class="layui-btn" data-type="reload" onclick="ajaxkf(this,0,'添加客服','/admin/seo/kefuAddEdite')" lay-submit lay-filter="adverI">添加</button>
+    <span class="layui-btn layui-bg-cyan" style="height: 30px;line-height: 30px;" data-type="reload">记录总数:  共 {$data|count} 条</span>
+
+    </td>
+  </tr>
+ <tr>
+    <td width="6%">id</td>
+    <td>类型</td>
+    <td>客服名称</td>
+    <td>客服账号</td>
+    <td>排列顺序</td>
+    <td>是否禁用</td>
+    <td width="20%">操作</td>
+  </tr>
+
+  {volist name="data" id="vo"}
+	 <tr>
+      <td>{$vo['id']}</td>
+      <td>
+        {$vo['type'] == 1?"QQ":($vo['type'] == 2?"微信":"阿里")}
+      </td>
+      <td>
+        {$vo['name']}
+      </td>
+      <td>
+        {$vo['zhanghao']}
+      </td>
+      <td>
+        {$vo['sort']}
+      </td>
+      <td>
+      <input type="checkbox" name="status" lay-filter="status" id="{$vo['id']}" lay-skin="switch" {if condition="$vo['status'] == 1"}checked{/if} lay-text="开启|关闭"> </td>
+      <td>
+        <a class="layui-btn layui-bg-success" style="height: 25px;line-height: 25px" onclick="ajaxkf(this,{$vo['id']},'修改客服信息','/admin/seo/kefuAddEdite')">编辑</a>
+        <a class="layui-btn layui-bg-red" style="height: 25px;line-height: 25px" onclick="ajaxaidel(this,{$vo['id']})" lay-event="delete">删除</a>
+      </td>
+	  </tr>
+  {/volist}
+</table>
+<div id="page" style="text-align: center;"></div>
+<script>
+  /**************************************************************************/
+
+function ajaxaidel(obj,id){
+  if ($(obj).attr('lay-event') == "delete") {
+    layer.confirm('您确定要删除这条数据吗？', {
+      btn: ['确定','取消'] //按钮
+      }, function(){
+$.post("/admin/seo/kefuDelete/",{id:id},function(data){
+
+        if (data['core'] == 0) {
+              layer.msg(data['message'],function(){
+                layer.closeAll('dialog'); 
+              });
+              return false;
+            }
+            layer.msg(data['message'],function(){
+            $(obj).parent('td').parent('tr').remove();
+              layer.closeAll('dialog'); 
+            });
+            window.location.reload();
+
+          })
+  });
+
+    return false;
+  }
+  }
+
+
+//edit
+
+        layui.use(['form','laypage'], function(){
+            $ = layui.jquery;
+          var form = layui.form;
+          var laypage = layui.laypage;
+   // 数据的集合
+var pcountInt = parseInt({$data|count}) ; //总数据
+var psizeInt= {$limit}; //页面大小
+var curr = {$curr}; //当前页
+var ptotalpages=Math.ceil(pcountInt/psizeInt);// 总记录数 
+
+
+  // 分页组件
+  laypage.render({
+    elem: 'page', // div的id号
+    count: pcountInt,  // 数据的总数，后端获取
+    limit: psizeInt,  // 分页
+    layout: ['count','prev','page','next','limit','refresh','skip'],
+    limits: [10,20,30,100],
+    pages: ptotalpages,
+    curr: curr,
+    jump:function(obj,first){
+      if (!first) {
+        var curr = obj.curr;
+        window.location.href = "/admin/seo/kefu?limit="+obj.limit+"&curr="+curr;
+      }
+    }
+  })
+
+        form.on('switch(status)', function(data){
+          var id = data.elem.id;
+          var status = data.elem.checked==true?1:(data.elem.checked==false?0:2);
+
+      if (id == '' || status == 2) {
+        layer.msg('参数有误');
+        return false;
+      }
+          $.post("/admin/seo/kefuEdit/",{id:id,value:status,type:"status"},function(data){
+            layer.msg(data["message"],{icon: data["core"]==0?5:6});
+          })
+        })
+})
+</script>
+
+</body>
+</html>
