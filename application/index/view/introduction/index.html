@@ -1,4 +1,5 @@
 {include file="public/introduction"}
+		<script type="text/javascript" src="__STATIC_index__/js/list.js"></script>
 
 				<ol class="am-breadcrumb am-breadcrumb-slash">
 					<li><a href="#">首页</a></li>
@@ -695,12 +696,14 @@
 //*****************************加入购物车   购买**************************************************************//	
 function buy(obj){
 	var spec = [];
+	var specList = [];
 	var i_s = 0;
 	var i_count = "{$item['spec']|count}";
 	$('.J_TSaleProp li').each(function(){
 		if ($(this).hasClass('selected')) {
 			var s_p = $(this).attr('data-id').split('_');
 			spec[i_s] = s_p[1];
+			specList[i_s] = $(this).attr('data-id');
 			i_s++;
 		}
 	})
@@ -710,10 +713,9 @@ function buy(obj){
 	if (i_count != i_s) {
 		alert("请选择商品属性");
 	}else{
-		var is_login = "{$Request.session.admin_user}";
+		var is_login = "{$Request.session.user}";
 		if (is_login == '') {
 			alert("请登录");
-			// console.log('{:url("index/login")}');
 			window.location.href = '{:url("index/login")}';
 			return false;
 		}else{
@@ -721,7 +723,23 @@ function buy(obj){
 			if ($(obj).attr('data-id') == "LikBasket") {
 
 			}else if ($(obj).attr('data-id') == "LikBuy"){
-
+				var listAdd = {'n':12345}; 
+				// var list['num'] = $("#text_box").val();
+				// var list['id'] = "{$item['goods']['goods_id']}";
+				// var list['type'] = specList;
+				console.log(listAdd);
+				// $.ajax({
+				// 	'type': 'post',
+				// 	'url' : '/index/pay/index',
+				// 	'data': {},
+				// 	dataType : 'json',
+				// 	success:function(data){
+						
+				// 	},
+				// 	error:function(data){
+				// 		alert("网络出错，请检查网络状况！");
+				// 	}
+				// })
 			}
 		}
 	}
