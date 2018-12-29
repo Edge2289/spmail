@@ -1,0 +1,89 @@
+.menu-hd a:hover{
+	color: red;
+}
+.hidde{
+	display: none;
+}
+.tsgjjc li a{
+	color: #999999;
+}
+.tsgjjc ul{
+	list-style: none;
+}
+.tsgjjc li{
+	float: left;
+	color: #999999;
+	cursor: pointer;
+}
+.tsgjjc li:nth-of-type(even){padding-left: 5px;padding-right: 5px;}
+.tsgjjc li a:hover{
+	color: #ff6600;
+}
+@media screen and (max-width: 414px)  {
+	.hidde{
+		display: block;
+	}
+	.tsgjjc{
+		display: none;
+	}
+}
+.right_login{
+	color: red;
+}
+.searchAbout span{
+	cursor: pointer;
+}
+.hovshz {
+	display: none;
+    position: absolute;
+    z-index: 9;
+    padding: 10px;
+    width: 330px;
+    border: 1px solid #e23435;
+    margin-top: -1px;
+    background-color: white;
+}
+.hovshz ul li {
+    float: left;
+    width: 100px;
+    height: 26px;
+}
+.hovshz ul li a {
+    float: none;
+    margin-right: 10px;
+    line-height: 26px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+.font-pale {
+	position: relative;
+    float: left;
+    display: block;
+    cursor: pointer;
+    border: 1px solid #fff;
+}
+.disenk{
+    color: #999999;
+    text-align: center;
+    height: 29px;
+}
+.pale-dis{
+    border: 1px solid #fff;
+}
+.disenk .pale-dis:hover{
+	border-color:#e23435;
+	border-bottom-color:#fff;
+	position:relative;
+	z-index:10;
+}
+.innii{
+	border-color:#e23435;
+	border-bottom-color:#fff;
+	position:relative;
+	z-index:10;
+}
+.am-bc{
+	background: #ECECEC;color: #999;
+}

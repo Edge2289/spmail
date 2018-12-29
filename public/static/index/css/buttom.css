@@ -1,0 +1,146 @@
+@media screen and (min-width: 320px) and (max-width: 480px){
+	#foot{
+		display: none;
+	}
+}
+.foot {
+    margin: 20px auto 0;
+    background: #fff;
+    border-top: 1px #eee solid;
+}
+.foot_sm {
+    padding: 30px 0;
+    border-bottom: 1px #eee solid;
+    width: 1200px;
+    margin: 0 auto;
+}
+.foot_sm li {
+    float: left;
+    width: 230px;
+    position: relative;
+    padding-left: 70px;
+}
+.foot_sm li i.i_1 {
+    background-position: 0 0;
+}
+.foot_sm li i {
+    display: block;
+    background: url(../images/foot_ico.png) no-repeat;
+    width: 53px;
+    height: 53px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.foot_sm li h3 {
+    font-size: 16px;
+    margin-top: 3px;
+    font-weight: bold;
+}
+.foot_sm li {
+    float: left;
+    width: 300px;
+    position: relative;
+    padding-left: 70px;
+}
+.foot_sm li p {
+    font-size: 16px;
+    color: #888;
+    margin-top: 5px;
+}
+.bottom_link {
+    border-bottom: 1px #4b4d4c solid;
+    overflow: hidden;
+    padding: 20px 0;
+}
+.border_link {
+    width: 1200px;
+    margin: 0 auto;
+}
+.item_1 {
+    display: inline;
+    width: 200px;
+    overflow: hidden;
+    padding: 0 0 30px 55px;
+    border-right: 1px #eee solid;
+}
+.fl {
+    float: left;
+}
+.item_1 h3 {
+    color: rgb(102, 102, 102);
+    height: 35px;
+    line-height: 35px;
+    font-size: 18px;
+    font-family: 微软雅黑;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+.item_1 li {
+    line-height: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.item_1 li a {
+    color: #999;
+    height: 25px;
+    overflow: hidden;
+}
+
+a:hover {
+    color: #333;
+    text-decoration: none;
+    outline: 0 none;
+}
+.subnav {
+    text-align: center;
+    padding-top: 10px;
+    line-height: 24px;
+    color: rgb(170, 170, 170);
+    padding-bottom: 10px;
+    font-family: 微软雅黑;
+    background: rgb(52, 73, 94);
+}
+.foot_telnum {
+    float: right;
+    width: 200px;
+    text-align: center;
+}
+.foot_telnum p {
+    font-size: 28px;
+    font-family: arial;
+    color: #ff666b;
+    height: 30px;
+    line-height: 30px;
+    padding: 8px 0;
+    font-weight: 700;
+}
+.foot_telnum p span {
+    border-bottom: 1px #ff666b solid;
+}
+.font14 {
+    font-size: 14px;
+}
+
+.cfen {
+    color: #ff666b;
+}
+.cfen {
+    color: #c92a60;
+}
+.mat10 {
+    margin-top: 10px;
+}
+.foot_telnum img {
+    width: 70px;
+    height: 70px;
+    margin-left: 50px;
+    padding: 1px;
+    background: #fff;
+}
+.fl {
+    float: left;
+}
+img {
+    border: 0;
+}
