@@ -1,0 +1,84 @@
+{include file="public/header"}
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">管理员管理</a>
+        <a>
+          <cite>管理员日志</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" id="UserShuaxin" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <br>
+<blockquote class="layui-elem-quote layui-text">
+<span style="color:#00bcff;">操作提示</span><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;管理员日志
+</blockquote>
+<div class="layui-form">
+<div class="demoTable" style="float: left;margin-left: 20px;">
+</div>
+
+</div>
+<div style="clear: both;"></div>
+
+<table class="layui-table layui-form" style="width: 98%;margin: 10px auto;">
+  <tr>
+    <td width="100%" colspan="14">
+<!-- left -->
+<!-- left -->
+
+    </td>
+  </tr>
+
+  <tr>
+    <td>id</td>
+    <td>管理员名称</td>
+    <td>日志描述</td>
+    <td>ip</td>
+    <td>添加时间</td>
+  </tr>
+
+  {volist name="data" id="l"}
+    <tr>
+      <td>{$l['log_id']}</td>
+      <td>{$l['admin_name']}</td>
+      <td>{$l['log_info']}</td>
+      <td>{$l['log_ip']}</td>
+      <td>{$l['log_time']|date="Y-m-d h:i:s",###}</td>
+    </tr>
+  {/volist}
+</table>
+<div style="text-align:center;" id="logList"></div>
+    </div>
+  </body>
+</html>
+<script>
+layui.use(['laypage'],function(){
+  var laypage = layui.laypage;
+
+
+var pcountInt = parseInt({$dataSum|count}) ; //总数据
+var psizeInt= {$psizeInt}; //页面大小
+var pindex = {$pindex} ; //当前页
+var ptotalpages=Math.ceil(pcountInt/psizeInt);// 总记录数
+
+  // 分页
+  laypage.render({
+    elem : 'logList'  // 绑定标签
+    ,count : pcountInt // 数据总数
+    ,limit : psizeInt // 
+    ,layout: ['limit', 'prev', 'page', 'next']
+    ,limits: [10, 30, 50, 100]
+    ,pages : ptotalpages // 总页数
+    ,curr : pindex
+    ,jump : function(obj, first){
+      if(!first){
+        var pindex = obj.curr;
+        window.location.href = "/admin/manager/log?psizeInt="+obj.limit+"&pindex="+pindex;
+      }
+    }
+  })
+})
+</script>

@@ -13,18 +13,6 @@ use think\Request;
 */
 class User extends Base
 {
-	// redis 示例话
-	public function redisConfig()
-	{
-		$conf = [
-			'host' =>  '127.0.0.1',
-			'port' =>  '6379',
-			'auth' =>  '3600',
-			'index' =>  '11'
-		];
-		return new RedisClice($conf);
-	}
-
 	// 删除user
 	public function deleteRedis(){
 		$redis = $this->redisConfig();

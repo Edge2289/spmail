@@ -671,13 +671,50 @@ function ajaxAdver(obj,id='0'){
     x_admin_show("添加广告位","/admin/seo/adverAddEdit?id="+id,w,h);
 
   }
+
+function ajaxkf(obj,id='0',title='',url=''){
+    var w = document.documentElement.clientWidth-50 > 715 ? 520 : document.documentElement.clientWidth-230;
+    var h = document.documentElement.clientHeight - 10 > 710 ? 550 : document.documentElement.clientHeight-200;
+    x_admin_show(title,url+"?id="+id,w,h);
+}  
+// 弹出窗口i 公共
 function ajaxtc(obj,id='0',title='',url=''){
     var w = document.documentElement.clientWidth-50 > 715 ? 715 : document.documentElement.clientWidth-50;
     var h = document.documentElement.clientHeight - 10 > 710 ? 710 : document.documentElement.clientHeight-10;
     x_admin_show(title,url+"?id="+id,w,h);
 }
-function ajaxkf(obj,id='0',title='',url=''){
-    var w = document.documentElement.clientWidth-50 > 715 ? 520 : document.documentElement.clientWidth-230;
-    var h = document.documentElement.clientHeight - 10 > 710 ? 550 : document.documentElement.clientHeight-200;
-    x_admin_show(title,url+"?id="+id,w,h);
+// 删除数据公共
+function ajaxListDelete(obj,id,url = null){
+  if(url == null){
+    layui.msg("参数错误！");
+    return false;
+  }
+  if ($(obj).attr('lay-event') == "delete") {
+    layer.confirm('您确定要删除这条数据吗？', {
+      btn: ['确定','取消'] //按钮
+      }, function(){
+        $.ajax({
+          type: "post",
+          url: url,
+          data: {"id":id},
+          success:function(data){
+            var data = jQuery.parseJSON(data);
+            if (data['status'] == 0) {
+              layer.msg(data['info'],function(){
+                layer.closeAll('dialog'); 
+            });
+              return false;
+            }
+            layer.msg(data['info'],function(){
+            $(obj).parent('td').parent('tr').remove();
+              layer.closeAll('dialog'); 
+            });
+         },error:function(){
+            layer.msg("网络出错！！！");
+         }
+       });
+  });
+
+    return false;
+  }
 }

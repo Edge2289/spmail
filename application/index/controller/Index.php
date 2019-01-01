@@ -205,6 +205,4 @@ class Index extends Base
         }
         return json_encode($data);
     }
-    
-
 }

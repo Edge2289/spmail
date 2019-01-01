@@ -55,14 +55,13 @@
                      'linkList'=>'友情链接列表',                                   
          	      )
                ),        
-              'admin/admin'=>array(
-                'name' =>'权限管理',
+              'admin/manager'=>array(
+                'name' =>'管理员管理',
                 'action'=>array(
-                     'index'=>'管理员列表',    
-                     'admin_info'=>'编辑管理员',                        
+                     'index'=>'管理员列表',                   
                      'log'=>'管理员日志',
-                     'role'=>'角色管理',         
-                     'role_info'=>'创建编辑角色',                    
+                     'role'=>'角色管理',  
+                     'contorller'=>'控制器管理',                 
          	      )
                ),        
               'admin/comment'=>array(
@@ -72,12 +71,12 @@
                      'detail'=>'评论回复',
          	      )
                ),        
-              'admin/template'=>array(
-                'name' =>'模板管理',
-                'action'=>array(
-                     'templatelist'=>'模板选择',                     
-         	      )
-               ),       
+              // 'admin/template'=>array(
+              //   'name' =>'模板管理',
+              //   'action'=>array(
+              //        'templatelist'=>'模板选择',                     
+         	    //   )
+              //  ),       
              	'admin/configTemplate'=>array(
             	   'name'=>'配置管理',
             	   'action'=>array(

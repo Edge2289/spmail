@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '192.168.10.10', // 35.229.244.9
+    'hostname'        => '120.79.65.240', // 120.79.65.240  b35.229.244.9  192.168.10.10
     // 数据库名
     'database'        => 'shop',
     // 用户名
-    'username'        => 'homestead',  // shop
+    'username'        => 'root',  // shop
     // 密码
-    'password'        => 'secret',     //  gdf6g2df3g2d3f
+    'password'        => 'xie19970326',     //  gdf6g2df3g2d3f
     // 端口
     'hostport'        => '3306',
     // 连接dsn

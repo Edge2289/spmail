@@ -41,10 +41,4 @@ class Admin extends Model
 			]);
 	}
 
-	// 设置状态的中文
-	// public function getStatusAttr($value)
- //    {
- //        $status = [-1=>'删除',0=>'禁用',1=>'正常',2=>'待审核'];
- //        return $status[$value];
- //    }
 }

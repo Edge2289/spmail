@@ -1,0 +1,69 @@
+{include file="public/header"}
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">管理员管理</a>
+        <a>
+          <cite>管理员管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" id="UserShuaxin" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <br>
+<blockquote class="layui-elem-quote layui-text">
+<span style="color:#00bcff;">操作提示</span><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;管理员管理
+</blockquote>
+<div class="layui-form">
+<div class="demoTable" style="float: left;margin-left: 20px;">
+</div>
+
+</div>
+<div style="clear: both;"></div>
+
+<table class="layui-table layui-form" style="width: 98%;margin: 10px auto;">
+  <tr>
+    <td width="100%" colspan="14">
+<!-- left -->
+    <div class="layui-btn-container" style="float: left;"> 
+      <button class="layui-btn layui-btn-sm" onclick="ajaxtc(this,0,'管理员管理','{:Url(\'manager/manaEdit\')}')" lay-event="add"><i class="layui-icon">&#xe654;</i>新增管理员</button> </div>
+<!-- left -->
+
+    </td>
+  </tr>
+
+  <tr>
+    <td width="2%">
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+     </td>
+    <td>管理员名称</td>
+    <td>邮箱</td>
+    <td>角色</td>
+    <td>状态</td>
+    <td>注册时间</td>
+    <td>操作</td>
+  </tr>
+
+  {volist name="data" id="l"}
+<tr>
+    <td><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div> </td>
+    <td>{$l['admin_name']}</td>
+    <td>{$l['admin_email']}</td>
+    <td>{$l['admin_role']}</td>
+    <td>{$l['status']}</td>
+    <td>{$l['admin_time']}</td>
+    <td>
+      <a class="layui-btn layui-btn-xs" onclick="ajaxtc(this,{$l['admin_id']},'管理员管理','{:Url(\'manager/manaEdit\')}')" lay-event="edit">编辑</a>
+      <a class="layui-btn layui-btn-primary layui-btn-xs" onclick="ajaxManagerStatus(this,{$l['admin_id']})" lay-event="Status">审核</a>
+      <a class="layui-btn layui-btn-primary layui-btn-xs" onclick="ajaxlevelListAdd(this,{$l['admin_id']})" lay-event="delete">删除</a>
+    </td>
+  </tr>
+  {/volist}
+</table>
+    </div>
+
+  </body>
+
+</html>

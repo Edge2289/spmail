@@ -1,0 +1,83 @@
+{include file="public/header"}
+<body>
+<br>
+<form class="layui-form">
+  <div class="layui-form-item">
+    <label class="layui-form-label">管理员名称</label>
+<div style="clear: bold;"></div>
+    <div class="layui-input-block">
+      <input type="text" name="admin_name" placeholder="请输入管理员名称" value="{$data['admin_name']}" class="layui-input">
+    </div>
+  </div>
+   <div class="layui-form-item">
+    <label class="layui-form-label">管理员邮箱</label>
+<div style="clear: bold;"></div>
+    <div class="layui-input-block">
+      <input type="text" name="admin_name" placeholder="请输入邮箱" value="{$data['admin_name']}" class="layui-input">
+    </div>
+  </div>
+   <div class="layui-form-item">
+    <label class="layui-form-label">角色</label>
+    <div class="layui-input-block" style="width: 190px;margin-left: 130px;">
+      <select name="user_lever" lay-verify="required" style="width: 180px;">
+        <option value="0" style="width: 120px;">请选择</option>
+        <option value="1">超级管理员</option>
+        <option value="2">出纳</option>
+      </select>
+    </div>
+  </div>
+   <div class="layui-form-item">
+    <label class="layui-form-label">状态</label>
+    <div class="layui-input-block">
+      <input type="radio" name="status" value="-1" {if condition="-1 == $data['status']"}checked="checked"{/if} title="删除">
+      <input type="radio" name="status" value="0" {if condition="0 == $data['status']"}checked="checked"{/if} title="禁用">
+      <input type="radio" name="status" value="1" {if condition="1 == $data['status']"}checked="checked"{/if} title="正常">
+      <input type="radio" name="status" value="2" {if condition="2 == $data['status']"}checked="checked"{/if} title="待审核">
+    </div>
+  </div>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">管理员描述</label>
+    <div class="layui-input-block" style="margin-left: 10px;">
+      <textarea name="admin_name" placeholder="请输入管理员描述" class="layui-textarea desc">{$data['admin_name']}</textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block" style="  width: 100%;">
+      <button class="layui-btn" lay-submit lay-filter="lerverSubmit" style="margin-left: 150px;">立即提交</button>
+    </div>
+  </div>
+</form>
+<script type="text/javascript">
+
+layui.use('form',function(){
+  var form = layui.form;
+
+  form.on('submit(lerverSubmit)',function(data){
+    $.ajax({
+          type : 'post',
+          url  : '/admin/manager/managerEdit',
+          data : {'data':JSON.stringify(data.field),'info':"{$data['admin_name']}"},
+          dataType : 'json',
+          success:function(data){
+             if (data['status'] == 0) {
+                   layer.msg(data['info'], {icon: 5},function () {});
+                }else{
+                   layer.msg(data['info'], {icon: 6},function () {
+                    // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+                      setInterval(repla(),2000);});
+                  }
+          },
+          error:function(data){
+            layui.msg("请检查网络设置！");
+          }
+    })
+    return false;
+  })
+})
+
+</script>
+</body>
+</html>
