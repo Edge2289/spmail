@@ -5,13 +5,15 @@
          $(".add").click(function(){
           var t=$(this).parent().find('input[class*=text_box]');
          t.val(parseInt(t.val())+1)
+         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val()));
         })
       $(".min").click(function(){
        var t=$(this).parent().find('input[class*=text_box]');
          t.val(parseInt(t.val())-1)
-         if(parseInt(t.val())<0){
-          t.val(0);
+         if(parseInt(t.val())<1){
+          t.val(1);
           }
+         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val()));
        })
     }) 
 
@@ -73,7 +75,14 @@
 					$('.theme-popover').slideDown(200);																		
 					
 				})
-				
+				$('.theme-popover-mask').click(function() {
+
+					$(document.body).css("overflow","visible");
+					$('.theme-login').removeClass("selected");
+					$('.item-props-can').removeClass("selected");					
+					$('.theme-popover-mask').hide();
+					$('.theme-popover').hide();
+				})
 				$('.theme-poptit .close,.btn-op .close').click(function() {
 
 					$(document.body).css("overflow","visible");

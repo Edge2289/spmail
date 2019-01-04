@@ -13,17 +13,6 @@ class Redis extends Base
 {
 	public $redis ;
 
-	public function __construct()
-	{
-		$conf = [
-			'host' =>  '127.0.0.1',
-			'port' =>  '6379',
-			'auth' =>  '3600',
-			'index' =>  '11'
-		];
-		$redis = new RedisClice($conf);
-	}
-
 	public function ceshi()
 	{
 		$conf = [

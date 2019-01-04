@@ -1101,7 +1101,6 @@ public function goods_img_delete(Request $request)
 	public function brandlist_add()
 	{
 		$catelist = json_decode(Goods_cate::goos_list__handel(Db::table('shop_goods_category')->order('cate_id desc')->select()),true);
-		// var_dump($catelist[0]);die;
 		$this->assign([
 			'catelist_one' => $catelist[0],
 			'catelist_two' => $catelist[1],

@@ -7,7 +7,6 @@ use app\index\sms\SendSMS;
 use app\index\sms\SMS_dd;
 use app\index\model\Shop_user;
 use app\index\model\Goods_cate;
-use app\common\redis\RedisClice;
 use app\index\model\Goods;
 use think\viewport;
 use think\Request;
@@ -20,17 +19,6 @@ use think\Db;
 
 class Index extends Base
 {
-    // redis 示例话
-    public function redisConfig()
-    {
-        $conf = [
-            'host' =>  '127.0.0.1',
-            'port' =>  '6379',
-            'auth' =>  '3600',
-            'index' =>  '11'
-        ];
-        return new RedisClice($conf);
-    }
 
 	//显示index
     public function index()
@@ -177,9 +165,9 @@ class Index extends Base
 	       		$map = ['user_email'=>$obj['login_user']];
         		$datt = Shop_user::get($map);
 	       	}
-	       		if (!is_null($datt)) {
-        	$pw = Db::table('shop_salt')->where('user_id',$datt->user_id)->field('salt_pw')->find();
-	       		}
+	        if (!is_null($datt)) {
+        	   $pw = Db::table('shop_salt')->where('user_id',$datt->user_id)->field('salt_pw')->find();
+	       	}
 	       	if (is_null($datt)) {
 	       			$data['static'] = 0;
         			$data['message'] = "账号或密码错误！！";
@@ -205,4 +193,5 @@ class Index extends Base
         }
         return json_encode($data);
     }
+
 }

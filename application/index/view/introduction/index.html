@@ -53,7 +53,7 @@
 									<img src="<?php echo 'http://'.$_SERVER['HTTP_HOST'].str_replace('\\','/',$item['img'][0]['img_src']);?>" 
 									alt="暂无图片" 
 									rel="<?php echo 'http://'.$_SERVER['HTTP_HOST'].str_replace('\\','/',$item['img'][0]['img_src']);?>" 
-									class="jqzoom" />
+									class="jqzoom" style="width: 350px;height: 350px;" />
 								</a>
 							</div>
 							<ul class="tb-thumb" id="thumblist">
@@ -192,7 +192,7 @@
 							</dl>
 							<div class="clear"></div>
 							<!--活动	-->
-							<div class="shopPromotion gold">
+							<div class="shopPromotion gold" style="display: none">
 								<div class="hot">
 									<dt class="tb-metatit">店铺优惠</dt>
 									<div class="gold-list">
@@ -221,12 +221,12 @@
 							</div>
 							<li>
 								<div class="clearfix tb-btn tb-btn-buy theme-login">
-									<a id="LikBuy" data-id="LikBuy" onclick="buy(this)" title="点此按钮到下一步确认购买信息" href="#">立即购买</a>
+									<a id="LikBuy" href="javascript:void(0)" data-id="LikBuy" onclick="buy(this)" title="点此按钮到下一步确认购买信息" href="#">立即购买</a>
 								</div>
 							</li>
 							<li>
 								<div class="clearfix tb-btn tb-btn-basket theme-login">
-									<a id="LikBasket" data-id="LikBasket" onclick="buy(this)" title="加入购物车" href="#"><i></i>加入购物车</a>
+									<a id="LikBasket" href="javascript:void(0)" data-id="LikBasket" onclick="buy(this)" title="加入购物车" href="#"><i></i>加入购物车</a>
 								</div>
 							</li>
 						</div>
@@ -687,7 +687,13 @@
 						</div>
 </div>
 						<div class="clear"></div>
-
+<form id="buy_goods_form" method="POST" action="">
+	<input type="hidden" name="type" id="type" value="">
+	<input type="hidden" name="num" id="num" value="">
+	<input type="hidden" name="id" id="id" value="">
+    <input type="hidden" name="store_count" id="store_count" value="{$item['goods']['store_count']}"/><!-- 活动库存 -->
+	<input type="hidden" name="__token__" value="{$Request.token}" />
+</form>
 <!-- ************************************************************************** -->
 	<!--       底部             -->
 {include file="public/bottom"}
@@ -719,34 +725,34 @@ function buy(obj){
 			window.location.href = '{:url("index/login")}';
 			return false;
 		}else{
+			var store_count = "{$item['goods']['store_count']}";
+			if (parseInt($("#text_box").val()) > parseInt(store_count)) {
+				alert('数量不可以大于库存');
+				return false;
+			}
 			// LikBasket  购物车 LikBuy  下单
 			if ($(obj).attr('data-id') == "LikBasket") {
 
 			}else if ($(obj).attr('data-id') == "LikBuy"){
-				var listAdd = {'n':12345}; 
-				// var list['num'] = $("#text_box").val();
-				// var list['id'] = "{$item['goods']['goods_id']}";
-				// var list['type'] = specList;
-				console.log(listAdd);
+				$('#type').attr('value',specList);
+				$('#num').attr('value',$("#text_box").val());
+				$('#id').attr('value',"{$item['goods']['goods_id']}");
+				var form = $('#buy_goods_form');
+				form.attr('action', "/index/pay/index/").submit();
+				// $.post("/index/pay/index/",{'listAdd':JSON.stringify(listAdd)})
 				// $.ajax({
-				// 	'type': 'post',
-				// 	'url' : '/index/pay/index',
-				// 	'data': {},
-				// 	dataType : 'json',
-				// 	success:function(data){
-						
-				// 	},
-				// 	error:function(data){
-				// 		alert("网络出错，请检查网络状况！");
-				// 	}
+				// 	'type' : 'POST',
+				// 	'url'  : '/index/pay/index/',
+				// 	'data' : {'listAdd':JSON.stringify(listAdd),'token':token},
+				// 	'dataType' : 'json',
 				// })
 			}
 		}
 	}
 }
 	$(function(){
-Array.prototype.diff = function(a) {
-    return this.filter(function(i) {return a.indexOf(i) < 0;});
+		Array.prototype.diff = function(a) {
+    	return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
 
 
