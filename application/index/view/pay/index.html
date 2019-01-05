@@ -187,7 +187,7 @@
 														<span class="phone-title">购买数量</span>
 														<div class="sl">
 															<input class="min am-btn" name="reduceNum" type="button" value="-" />
-															<input class="text_box" name="" type="text" value="{$goodsList['goods']['num']}" style="width:30px;" />
+															<input class="text_box" name="" type="text" value="{$goodsList['goods']['num']}" style="width:30px;text-align: center;" />
 															<input class="add am-btn" name="addNum" type="button" value="+" />
 														</div>
 													</div>
@@ -202,7 +202,11 @@
 												<div class="td-inner">
 													<span class="phone-title">配送方式</span>
 													<div class="pay-logis">
-														快递<b class="sys_item_freprice">10</b>元
+														{if condition="$goodsList['goods']['is_free_shipping'] == 1"}
+															包邮
+														{else}
+														快递:<b class="sys_item_freprice">10</b>元
+														{/if}
 													</div>
 												</div>
 											</li>
@@ -220,7 +224,7 @@
 								<div class="order-user-info">
 									<div id="holyshit257" class="memo">
 										<label>买家留言：</label>
-										<input type="text" title="选填,对本次交易的说明（建议填写已经和卖家达成一致的说明）" placeholder="选填,建议填写和卖家达成一致的说明" class="memo-input J_MakePoint c2c-text-default memo-close">
+										<input style="height: 30px;" type="text" title="选填,对本次交易的说明（建议填写已经和卖家达成一致的说明）" placeholder="选填,建议填写和卖家达成一致的说明" class="memo-input J_MakePoint c2c-text-default memo-close">
 										<div class="msg hidden J-msg">
 											<p class="error">最多输入500个字符</p>
 										</div>
@@ -284,7 +288,7 @@
 							<!--含运费小计 -->
 							<div class="buy-point-discharge ">
 								<p class="price g_price ">
-									合计（含运费） <span>¥</span><em class="pay-sum">244.00</em>
+									合计（含运费） <span>¥</span><em class="pay-sum"><?php echo $goodsList['item']['price']*$goodsList['goods']['num'];?></em>
 								</p>
 							</div>
 
@@ -294,7 +298,7 @@
 									<div class="box">
 										<div tabindex="0" id="holyshit267" class="realPay"><em class="t">实付款：</em>
 											<span class="price g_price ">
-                                    <span>¥</span> <em class="style-large-bold-red " id="J_ActualFee">244.00</em>
+                                    <span>¥</span> <em class="style-large-bold-red " id="J_ActualFee"><?php echo $goodsList['item']['price']*$goodsList['goods']['num'];?></em>
 											</span>
 										</div>
 
@@ -333,7 +337,7 @@
 						<div class="clear"></div>
 					</div>
 				</div>
-				<div class="footer">
+				<div class="footer" style="display: none;">
 					<div class="footer-hd">
 						<p>
 								<b>|</b>

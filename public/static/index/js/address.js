@@ -5,7 +5,9 @@
          $(".add").click(function(){
           var t=$(this).parent().find('input[class*=text_box]');
          t.val(parseInt(t.val())+1)
-         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val()));
+         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 商品详情
+         $('.pay-sum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 商品详情
+         $('#J_ActualFee').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 总价格
         })
       $(".min").click(function(){
        var t=$(this).parent().find('input[class*=text_box]');
@@ -13,7 +15,9 @@
          if(parseInt(t.val())<1){
           t.val(1);
           }
-         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val()));
+         $('.J_ItemSum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 商品详情
+         $('.pay-sum').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 商品详情
+         $('#J_ActualFee').html(parseInt($('.J_ItemSum').attr('data-price'))*parseInt(t.val())); // 总价格
        })
     }) 
 

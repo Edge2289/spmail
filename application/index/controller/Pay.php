@@ -13,7 +13,7 @@ use app\index\model\Goods;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-04 17:22:06
+ * @Last Modified time: 2019-01-05 17:59:23
  */
 
 class Pay extends Base
@@ -46,7 +46,6 @@ class Pay extends Base
         				->select();
        
         /*****************************************************************/
-
         $this->linkbutton();
 		$this->assign([
                 'listAdd' => $listAdd,
