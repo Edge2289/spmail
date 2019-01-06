@@ -1,0 +1,128 @@
+{include file="public/header"}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+.speclist_bj{
+  padding: 5px;
+  border-radius: 5px;
+  color: #5D5A5A;
+  border: 1px solid #e0e0e0;
+  margin-left: 15px;
+  cursor: pointer;
+}
+.speclist_delete{
+   padding: 5px;
+  border-radius: 5px;
+  color: #5D5A5A;
+  border: 1px solid #e0e0e0;
+  margin-left: 15px;
+  cursor: pointer;
+}
+.speclist_bj:hover{
+  background-color: #009688;
+  color: white;
+  border: 1px solid #009688;
+  box-shadow: 2px 2px 2px #888888;
+}
+.speclist_delete:hover{
+  background-color: #FF5722;
+  color: white;
+  border: 1px solid #FF5722;
+  box-shadow: 2px 2px 2px #888888;
+}
+</style>
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">配置管理</a>
+        <a>
+          <cite>支付管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+    <blockquote class="layui-elem-quote" style="color: #999999;">操作提示：支付管理，会员购买商品支付方式，由平台设置管理</blockquote>
+      <xblock>
+        <button class="layui-btn layui-btn-danger" style="background: #27a599;"  onclick="member_add('one')"><i class="iconfont">&#xe6b9;</i>&nbsp;添加支付</button>
+
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>支付名称</th>
+            <th>appid</th>
+            <th>商户号/商户私钥</th>
+            <th>公众账号/支付宝公钥</th>
+            <th>状态</th>
+            <th width="160px">操作</th>
+            </tr>
+            <?php
+              for($i = 0 ; $i < count($data) ; $i++){
+                echo "<tr>";
+                echo "<th>".($i+1)."</th>";
+                echo "<th>".$data[$i]["pay_name"]."</th>";
+                echo "<th>".$data[$i]["pay_wx_appid"]."</th>";
+                echo "<th>".$data[$i]["pay_wx_mchid"]."</th>";
+                echo "<th>".$data[$i]["pay_wx_key"]."</th>";
+                if($data[$i]["static"] == 0){
+                  echo '<th onclick="member_cur(this,'.$data[$i]["id"].')"><span style="color: #1BBC9D;
+    cursor: pointer;" data-type="1"><i class="layui-icon">&#x1005;</i>是</span></th>';
+                }else{
+                echo '<th onclick="member_cur(this,'.$data[$i]["id"].')"><span style="color: #9ea3a7;
+    cursor: pointer;" data-type="0"><i class="layui-icon">&#x1007;</i>否</span></th>';
+                }
+                echo '<th width="160px">
+                    <span onclick="member_add('.$data[$i]["id"].')" data-id="'.$data[$i]["id"].'" class="speclist_bj">编辑</span>
+                </th>';
+                echo "</tr>";
+              }
+            ?>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+    <script>
+
+  // 添加 、 修改 支付
+      function member_add(id){
+        x_admin_show('添加支付',"{:url('Configtemplate/supplierconfigadd')}?id="+id,500,550);
+      }
+
+      function member_cur(obj ,id){
+        var yes = '<span data-type="1" style="color: #1BBC9D;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1005;</i>是</span>';
+        var no = '<span data-type="0" style="color: #9ea3a7;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1007;</i>否</span>';
+        var data = $(obj).children('span').attr("data-type")+"_"+id;
+        console.log(data);
+        $.ajax({
+            type : 'get',
+            url  : '/admin/Configtemplate/supplierconfigadd_insert',
+            data : {'data':JSON.stringify(data),'id':"_m_n"},
+            dataType : 'json',
+            success:function(data){
+        var data = jQuery.parseJSON(data);
+                if (data['core'] == 0) {
+                   layer.msg(data['message'], {icon: 5},function () {});
+              }else{
+                if ($(obj).children('span').attr("data-type") == 0) {
+                  $(obj).html(yes);
+                }else{
+                  $(obj).html(no);
+                }
+                  }
+            },
+            error:function(){
+              layer.msg("提交出错！！！");
+            }
+        })
+        
+      }
+   
+
+    </script>
+  </body>
+
+</html>

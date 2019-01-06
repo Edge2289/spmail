@@ -80,48 +80,50 @@
              	'admin/configTemplate'=>array(
             	   'name'=>'配置管理',
             	   'action'=>array(
+                'payconfig'=>'支付配置',
+                'expressconfig'=>'快递配置',
             		'supplierConfig'=>'供应商管理',
             		'poatconfig'=>'运费配置',
             		'emeimpor'=>'短信配置',
             		'emeconfig'=>'短信模板配置',
-            		'emailConfig'=>'邮箱配置',
+            		'emailconfig'=>'邮箱配置',
                   )
             	),     
-              'admin/wechat'=>array(
-                'name' =>'微信管理',
-                'action'=>array(
-                     'index'=>'公众号管理',
-                     'setting'=>'微信配置',
-                     'menu'=>'微信菜单',
-                     'text'=>'文本回复',
-                     'add_text'=>'编辑文本回复',
-                     'img'=>'图文回复',
-                     'add_img'=>'编辑图文回复',                   
-                     'news'=>'组合图文回复',   
-                     'add_news'=>'编辑图文',
-         	      )
-               ),                
-              'admin/plugin'=>array(
-                'name' =>'插件管理',
-                'action'=>array(
-                     'index'=>'插件列表',
-                     'setting'=>'插件配置',
-         	      )
-               ),
-               'admin/topic'=>array(
-               		'name' =>'专题管理',
-               		'action'=>array(
-               			'topicList'=>'专题列表',
-               			'topic'=>'添加专题',
-               		)
-               ),
-               'admin/promotion'=>array(
-               		'name' =>'团购管理',
-               		'action'=>array(
-               			'group_buy_list'=>'团购列表',
-               			'group_buy'=>'编辑团购',
-               		)
-               ),
+              // 'admin/wechat'=>array(
+              //   'name' =>'微信管理',
+              //   'action'=>array(
+              //        'index'=>'公众号管理',
+              //        'setting'=>'微信配置',
+              //        'menu'=>'微信菜单',
+              //        'text'=>'文本回复',
+              //        'add_text'=>'编辑文本回复',
+              //        'img'=>'图文回复',
+              //        'add_img'=>'编辑图文回复',                   
+              //        'news'=>'组合图文回复',   
+              //        'add_news'=>'编辑图文',
+         	    //   )
+              //  ),                
+              // 'admin/plugin'=>array(
+              //   'name' =>'插件管理',
+              //   'action'=>array(
+              //        'index'=>'插件列表',
+              //        'setting'=>'插件配置',
+         	    //   )
+              //  ),
+              //  'admin/topic'=>array(
+              //  		'name' =>'专题管理',
+              //  		'action'=>array(
+              //  			'topicList'=>'专题列表',
+              //  			'topic'=>'添加专题',
+              //  		)
+              //  ),
+              //  'admin/promotion'=>array(
+              //  		'name' =>'团购管理',
+              //  		'action'=>array(
+              //  			'group_buy_list'=>'团购列表',
+              //  			'group_buy'=>'编辑团购',
+              //  		)
+              //  ),
                'admin/tools'=>array(
                		'name' =>'工具管理',
                		'action'=>array(
@@ -140,16 +142,16 @@
                			'finance'=>'财务统计',
                		)
                ),
-               'admin/distribut'=>array(
-               		'name' =>'分销管理',
-               		'action'=>array(
-               		       'tree'=>'分销关系',
-               			'set'=>'分销设置',
-                        'withdrawals'=>'提现申请记录',
-                         'remittance'=>'汇款记录',
-                         'rebate_log'=>'分成记录',
-               		)
-               ),  
+               // 'admin/distribut'=>array(
+               // 		'name' =>'分销管理',
+               // 		'action'=>array(
+               // 		       'tree'=>'分销关系',
+               // 			'set'=>'分销设置',
+               //          'withdrawals'=>'提现申请记录',
+               //           'remittance'=>'汇款记录',
+               //           'rebate_log'=>'分成记录',
+               // 		)
+               // ),  
               'admin/system'=>array(
                 'name' =>'系统设置',
                 'action'=>array(

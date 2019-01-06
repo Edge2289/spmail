@@ -367,4 +367,23 @@ class Configtemplate extends Base
 		return $EmailServer->send_out_mail($smtp,$setmail,$pw,$email_dk,$getmail,$body,$subject,$title,$subject);
 	}
 
+	/**
+	 * [payconfig 支付方式配置]
+	 * @return [type] [description]
+	 */
+	public function payconfig(){
+		$data = DB::table('shop_pay')
+					->where('static',0)
+					->select();
+		$this->assign('data',$data);
+		return $this->fetch();
+	}
+
+	/**
+	 * [expressconfig 快递配置]
+	 * @return [type] [description]
+	 */
+	public function expressconfig(){
+
+	}
 }
