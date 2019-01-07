@@ -372,13 +372,62 @@ class Configtemplate extends Base
 	 * @return [type] [description]
 	 */
 	public function payconfig(){
-		$data = DB::table('shop_pay')
-					->where('static',0)
-					->select();
+		$data = DB::table('shop_pay')->select();
 		$this->assign('data',$data);
 		return $this->fetch();
 	}
 
+	/**
+	 * [payconfigUpdate 配置属性修改]
+	 * data['type'] => 修改的配置文件类型
+	 * data['text'] => 修改的值
+	 * data['id']   => 修改的id
+	 * @return [type] [description]
+	 */
+	public function payconfigUpdate(){
+
+		$data['core'] = 0;
+		$data['message'] = '操作错误！';
+
+		$list = json_decode(input('data'),true);
+		if ($list['id'] == 1) {
+			$data['message'] = '在线支付不需要配置';
+			return json_encode($data);
+		}
+		$wx = [
+				'appid'=>'pay_wx_appid',
+				'mchid'=>'pay_wx_mchid',
+				'key'=>'pay_wx_key',
+				'secert'=>'pay_wx_secert'
+			];
+		$zfb = [
+				'appid'=>'pay_zfb_appid',
+				'mchid'=>'pay_zfb_merchant_private_key',
+				'key'=>'pay_zfb_alipay_public_key'];
+		if ($list['type'] == 'static') {
+			$type = 'static';
+		}else{
+			$type = $list['id'] == 2 ? $wx[$list['type']]: $zfb[$list['type']]; // 1 在线支付 2 微信支付  3 支付宝支付 
+		}
+		if (!empty($list) || !empty($list['id'])) {
+			
+			$i = Db::table('shop_pay')
+					->where('id',$list['id'])
+					->update([
+						$type=>trim($list['text'])
+					]);
+			if ($i) {
+				if ($list['type'] == 'static') {
+					$data['core'] = 2;
+				}else{
+					$data['core'] = 1;
+				}
+				$data['message'] = '操作成功！';
+			}
+
+		}
+		return json_encode($data);
+	}
 	/**
 	 * [expressconfig 快递配置]
 	 * @return [type] [description]

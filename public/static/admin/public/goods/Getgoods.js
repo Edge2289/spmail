@@ -250,7 +250,6 @@ $('.onSceneOne').click(function(){
     data[1] = inf;          // 列表 - 个别 - 全部
     data[2] = r;            // 类型
 
-    console.log(data);
     $.ajax({
         type : 'post',
         url  : '/admin/User/ajaxUserAUD',
