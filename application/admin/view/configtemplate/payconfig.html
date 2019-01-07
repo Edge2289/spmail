@@ -60,7 +60,7 @@
             <?php
               for($i = 0 ; $i < count($data) ; $i++){
                 echo "<tr>";
-                echo "<th>".($i+1)."</th>";
+                echo "<th>".$data[$i]["id"]."</th>";
                 echo "<th>".$data[$i]["pay_name"]."</th>";
                 echo "<th><input type='text' style='color: #636c72;' class='layui-input' onchange='payconfigUp(this,".$data[$i]["id"].",\"appid\")' onclick='this.value=$(this).attr(\"data-value\")' name='appid' value='已隐藏内容，点击查看或编辑' data-value='".$data[$i]["pay_wx_appid"]."'></th>";
                 echo "<th><input type='text' style='color: #636c72;' class='layui-input' onchange='payconfigUp(this,".$data[$i]["id"].",\"mchid\")' onclick='this.value=$(this).attr(\"data-value\")' name='mchid' value='已隐藏内容，点击查看或编辑' data-value='".$data[$i]["pay_wx_mchid"]."'></th>";

@@ -433,6 +433,49 @@ class Configtemplate extends Base
 	 * @return [type] [description]
 	 */
 	public function expressconfig(){
+		$data = Db::table('shop_kuaidi')->select();
+		$this->assign('data',$data);
+		return $this->fetch();
+	}
 
+	public function expressconfigadd(){
+		$id = empty(input('id'))?"one":input('id');
+		if ($id != "one") {
+			$data = Db::table('shop_kuaidi')->where('id',$id)->find();
+		}else{
+			$data = null;
+		}
+
+		$this->assign('id',$id);
+		$this->assign('data',$data);
+		return $this->fetch('expressconfig_add');
+	}
+
+	public function expressconfig_insert(){
+
+		$id = input('get.id');
+		$list = json_decode(input('get.data'),true);
+
+		$data['core'] = 0;
+		$data['message'] = '操作失败！';
+		if (empty($list)) {
+			$data['message'] = '错误参数';
+			return json_encode($data);
+		}
+		if ($id == "one" || empty($id)) { // 添加
+			$list['static'] = 0;
+			$list['time'] = time();
+			$i = Db::table('shop_kuaidi')
+					->insertGetId($list);
+		}else{  // 修改
+			$i = Db::table('shop_kuaidi')
+					->where('id',$id)
+					->update($list);
+		}
+		if ($i) {
+			$data['core'] = 1;
+			$data['message'] = '操作成功！';
+		}
+			return json_encode($data);
 	}
 }

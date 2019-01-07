@@ -36,48 +36,44 @@
         <a href="">首页</a>
         <a href="">配置管理</a>
         <a>
-          <cite>供应商管理</cite></a>
+          <cite>快递公司管理</cite></a>
       </span>
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
     <div class="x-body">
-    <blockquote class="layui-elem-quote" style="color: #999999;">操作提示：供应商管理，由平台设置管理</blockquote>
+    <blockquote class="layui-elem-quote" style="color: #999999;">操作提示：快递公司管理，由平台设置管理</blockquote>
       <xblock>
-        <button class="layui-btn layui-btn-danger" style="background: #27a599;"  onclick="member_add('one')"><i class="iconfont">&#xe6b9;</i>&nbsp;添加供应商</button>
+        <button class="layui-btn layui-btn-danger" style="background: #27a599;"  onclick="express_add('one')"><i class="iconfont">&#xe6b9;</i>&nbsp;添加快递公司</button>
 
       </xblock>
       <table class="layui-table">
         <thead>
           <tr>
             <th>ID</th>
-            <th>供应商名称</th>
-            <th>供应商描述</th>
-            <th>供应商联系人</th>
-            <th>供应商联系电话</th>
-            <th>所属管理员</th>
+            <th>快递名称</th>
+            <th>快递logo</th>
+            <th>快递描述</th>
             <th>状态</th>
             <th width="160px">操作</th>
             </tr>
             <?php
           for($i = 0 ; $i < count($data) ; $i++){
           echo "<tr>";
-            echo "<th>".($i+1)."</th>";
-            echo "<th>".$data[$i]["suppliers_name"]."</th>";
-            echo "<th>".$data[$i]["suppliers_desc"]."</th>";
-            echo "<th>".$data[$i]["suppliers_catacts"]."</th>";
-            echo "<th>".$data[$i]["suppliers_phone"]."</th>";
-            echo "<th>admin</th>";
-            if($data[$i]["is_check"] == 0){
-              echo '<th onclick="member_cur(this,'.$data[$i]["suppliers_id"].')"><span style="color: #1BBC9D;
+            echo "<th>".$data[$i]['id']."</th>";
+            echo "<th>".$data[$i]["name"]."</th>";
+            echo "<th><img src='".$data[$i]["logo"]."' width='50px' height='50px' alt='".$data[$i]["name"]."'/></th>";
+            echo "<th>".$data[$i]["miaosu"]."</th>";
+            if($data[$i]["static"] == 0){
+              echo '<th onclick="express_cur(this,'.$data[$i]["id"].')"><span style="color: #1BBC9D;
 cursor: pointer;" data-type="1"><i class="layui-icon">&#x1005;</i>是</span></th>';
             }else{
-            echo '<th onclick="member_cur(this,'.$data[$i]["suppliers_id"].')"><span style="color: #9ea3a7;
+            echo '<th onclick="express_cur(this,'.$data[$i]["id"].')"><span style="color: #9ea3a7;
 cursor: pointer;" data-type="0"><i class="layui-icon">&#x1007;</i>否</span></th>';
             }
             echo '<th width="160px">
-                <span onclick="member_add('.$data[$i]["suppliers_id"].')" data-id="'.$data[$i]["suppliers_id"].'" class="speclist_bj">编辑</span>
-                <span onclick="member_del(this,'.$data[$i]["suppliers_id"].')" data-id="'.$data[$i]["suppliers_id"].'" class="speclist_delete">删除</span>
+                <span onclick="express_add('.$data[$i]["id"].')" data-id="'.$data[$i]["id"].'" class="speclist_bj">编辑</span>
+                <span onclick="express_del(this,'.$data[$i]["id"].')" data-id="'.$data[$i]["id"].'" class="speclist_delete">删除</span>
             </th>';
             echo "</tr>";
           }
@@ -91,40 +87,12 @@ cursor: pointer;" data-type="0"><i class="layui-icon">&#x1007;</i>否</span></th
     </div>
     <script>
 
-// var pcountInt = $("#test1").attr("data-num");
-var pcountInt = parseInt({$datanum}) ; //总数据
-var psizeInt= {$psizeIntablet}; //页面大小
-var pindex = {$pindex} ; //当前页
-var ptotalpages=Math.ceil(pcountInt/psizeInt);// 总记录数
-
-layui.use('laypage', function(){
-  var laypage = layui.laypage;
-  //执行一个laypage实例
-  laypage.render({
-    elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-    ,count: pcountInt //数据总数，从服务端得到
-    ,limit:psizeInt
-    ,layout: ['limit', 'prev', 'page', 'next']
-    ,limits: [10, 20, 30, 100]
-    ,pages: ptotalpages //总页数
-    ,curr: pindex
-    ,jump: function (obj,first) {
-      if (!first) {
-   // var parId=$("#parId").val();
-   var pindex=obj.curr;
-   window.location.href="/admin/Configtemplate/supplierconfig?psizeInt="+obj.limit+"&pindex="+pindex;//跳转链接
-               }
-       }
-  });
-});
-
-
   // 添加 、 修改 供应商
-      function member_add(id){
-        x_admin_show('添加供应商',"{:url('Configtemplate/supplierconfigadd')}?id="+id,500,550);
+      function express_add(id){
+        x_admin_show('添加快递公司',"{:url('Configtemplate/expressconfigadd')}?id="+id,500,400);
       }
 
-      function member_cur(obj ,id){
+      function express_cur(obj ,id){
         var yes = '<span data-type="1" style="color: #1BBC9D;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1005;</i>是</span>';
         var no = '<span data-type="0" style="color: #9ea3a7;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1007;</i>否</span>';
         var data = $(obj).children('span').attr("data-type")+"_"+id;
@@ -153,7 +121,7 @@ layui.use('laypage', function(){
         
       }
       /*单个删除*/
-      function member_del(obj,id){
+      function express_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               //发异步删除数据
             $.ajax({
