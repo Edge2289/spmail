@@ -39,8 +39,25 @@
  
 //地址选择
 				$(function() {
+					/**
+					 * [buy-user   名字]
+					 * [buy-phone   电话]
+					 * [province   名字]
+					 * [city   名字]
+					 * [dist   名字]
+					 * [street   名字]
+					 * @param  {[type]} ) {					
+					 * @return {[type]}   [description]
+					 */
 					$(".user-addresslist").click(function() {
 						$(this).addClass("defaultAddr").siblings().removeClass("defaultAddr");
+						// 修改地址信息
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.province').html($(this).children('.address-left').children('.default-address').children('.buy-address-detail').children('.province').html());
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.city').html($(this).children('.address-left').children('.default-address').children('.buy-address-detail').children('.city').html());
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.dist').html($(this).children('.address-left').children('.default-address').children('.buy-address-detail').children('.dist').html());
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.street').html($(this).children('.address-left').children('.default-address').children('.buy-address-detail').children('.street').html());
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.buy-user').html($(this).children('.address-left').children('.user').children('.buy-address-detail').children('.buy-user').html());
+						$('#holyshit268').children('.buy-footer-address').children('.buy-address-detail').children('.buy-phone').html($(this).children('.address-left').children('.user').children('.buy-address-detail').children('.buy-phone').html());
 					});
 					$(".logistics").each(function() {
 						var i = $(this);
@@ -54,11 +71,7 @@
 						})
 					})
 				});
- 
- 
- 
- 
-})
+ 			})
  
 // 弹出地址选择
  

@@ -739,13 +739,6 @@ function buy(obj){
 				$('#id').attr('value',"{$item['goods']['goods_id']}");
 				var form = $('#buy_goods_form');
 				form.attr('action', "/index/pay/index/").submit();
-				// $.post("/index/pay/index/",{'listAdd':JSON.stringify(listAdd)})
-				// $.ajax({
-				// 	'type' : 'POST',
-				// 	'url'  : '/index/pay/index/',
-				// 	'data' : {'listAdd':JSON.stringify(listAdd),'token':token},
-				// 	'dataType' : 'json',
-				// })
 			}
 		}
 	}

@@ -95,23 +95,24 @@ cursor: pointer;" data-type="0"><i class="layui-icon">&#x1007;</i>否</span></th
       function express_cur(obj ,id){
         var yes = '<span data-type="1" style="color: #1BBC9D;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1005;</i>是</span>';
         var no = '<span data-type="0" style="color: #9ea3a7;cursor: pointer;" data-id='+id+'><i class="layui-icon">&#x1007;</i>否</span>';
-        var data = $(obj).children('span').attr("data-type")+"_"+id;
+        var data = {'static':$(obj).children('span').attr("data-type")};
         console.log(data);
         $.ajax({
             type : 'get',
-            url  : '/admin/Configtemplate/supplierconfigadd_insert',
-            data : {'data':JSON.stringify(data),'id':"_m_n"},
+            url  : '/admin/Configtemplate/expressconfig_insert',
+            data : {'data':JSON.stringify(data),'id':id},
             dataType : 'json',
             success:function(data){
         var data = jQuery.parseJSON(data);
                 if (data['core'] == 0) {
                    layer.msg(data['message'], {icon: 5},function () {});
-              }else{
-                if ($(obj).children('span').attr("data-type") == 0) {
-                  $(obj).html(yes);
-                }else{
-                  $(obj).html(no);
-                }
+                  }else{
+                    if ($(obj).children('span').attr("data-type") == 0) {
+                      $(obj).html(yes);
+                    }else{
+                      $(obj).html(no);
+                    }
+                   layer.msg(data['message'], {icon: 1},function () {});
                   }
             },
             error:function(){
@@ -125,8 +126,8 @@ cursor: pointer;" data-type="0"><i class="layui-icon">&#x1007;</i>否</span></th
           layer.confirm('确认要删除吗？',function(index){
               //发异步删除数据
             $.ajax({
-                  type : "get",
-                  url  : "/admin/Configtemplate/supplierconfigadd_delete",
+                  type : "post",
+                  url  : "/admin/Configtemplate/expressconfig_delete",
                   data : {'id':id},
                   dataType : "json",
                   success:function(data){

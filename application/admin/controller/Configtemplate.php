@@ -478,4 +478,22 @@ class Configtemplate extends Base
 		}
 			return json_encode($data);
 	}
+
+	/**
+	 * [expressconfig_delete 快递删除]
+	 * @return [type] [description]
+	 */
+	public function expressconfig_delete(){
+		$id = input('post.id');
+		$data['core'] = 0;
+		$data['message'] = '操作失败！';
+		if (!empty($id) && is_numeric($id)) {
+			$i = Db::table('shop_kuaidi')->where('id',$id)->delete();
+			if ($i) {
+				$data['core'] = 1;
+				$data['message'] = '操作成功！';
+			}
+		}
+		return json_encode($data);
+	}
 }
