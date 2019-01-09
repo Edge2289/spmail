@@ -1,6 +1,78 @@
 
  $(document).ready(function(){
+ ///////////////////////////////////////////////
+	$("#J_Go").click(function(){
+		var wuliu = '';
+		var pay = '';
+		var address = '';
+		var goodsNum = $('input[name="goodsNum"]').val();
+		var goodsid  = $('input[name="goodsid"]').val();
+		var liuyan  = $('input[name="liuyan"]').val();
 
+
+		$fujian = {
+			'wuliu' : "请选择物流方式",
+			'pay' : "请选择支付方式",
+			'address' : "请选择收货地址",
+			'goodsNum' : "商品数量有误",
+			'goodsid' : "商品错误，请重新购买",
+		}
+
+		$('.op_express_delivery_hot li').each(function(){
+			if ($(this).hasClass("selected")) {
+				wuliu = $(this).data("value");
+			}
+		})
+		$('.pay-list li').each(function(){
+			if ($(this).hasClass("selected")) {
+				pay = $(this).data("value");
+			}
+		})
+		$('.address-select li').each(function(){
+			if ($(this).hasClass("defaultAddr")) {
+				address = $(this).data("addr_id");
+			}
+		})
+
+		/**
+		 * [if 判断]
+		 * @param  {[type]} wuliu [description]
+		 * @return {[type]}       [description]
+		 */
+		if (wuliu == '') {
+			alert($fujian['wuliu']);
+			return false;
+		}
+		if (pay == '') {
+			alert($fujian['pay']);
+			return false;
+		}
+		if (address == '') {
+			alert($fujian['address']);
+			return false;
+		}
+		if (goodsid == '') {
+			alert($fujian['goodsid']);
+			return false;
+		}
+		if (goodsNum == '') {
+			alert($fujian['goodsNum']);
+			return false;
+		}
+
+		$('input[name="order_goodsNum"]').val(goodsNum);
+		$('input[name="order_goodsid"]').val(goodsid);
+		$('input[name="order_liuyan"]').val(liuyan);
+		$('input[name="order_wuliu"]').val(wuliu);
+		$('input[name="order_pay"]').val(pay);
+		$('input[name="order_address"]').val(address);
+
+		
+
+	})
+
+
+ //////////////////////////////////////////////
      $(function(){
          $(".add").click(function(){
           var t=$(this).parent().find('input[class*=text_box]');

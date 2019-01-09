@@ -15,10 +15,10 @@
 							<div class="tc-btn createAddr theme-login am-btn am-btn-danger">使用新地址</div>
 						</div>
 						<div class="clear"></div>
-						<ul>
+						<ul class="address-select">
 							<div class="per-border"></div>
 							{volist name="userAdd" id="addr"}
-							<li class="user-addresslist {if condition='$addr["is_default"] == 0'}defaultAddr{/if}" style="cursor: pointer;" data-addr-id="{$addr['address_id']}">
+							<li class="user-addresslist {if condition='$addr["is_default"] == 0'}defaultAddr{/if}" style="cursor: pointer;" data-addr_id="{$addr['address_id']}">
 								<div class="address-left">
 									<div class="user DefaultAddr">
 										<span class="buy-address-detail">   
@@ -43,7 +43,7 @@
 								</div>
 								<div class="clear"></div>
 
-								<div class="new-addr-btn">
+								<div class="new-addr-btn" style="display: none">
 									<a href="javascript:void('0')" <?php if($addr['is_default'] == 0){echo 'class="hidden"';}?>>设为默认</a>
 									<span class="new-addr-bar hidden">|</span>
 									<a href="javascript:void('0')">编辑</a>
@@ -74,7 +74,7 @@
 						<h3>选择支付方式</h3>
 						<ul class="pay-list">
 							{volist name="pay" id="paylist"}
-								<li class="pay card"><img src="{$paylist['pay_img']}" style="width: 36px;height: 36px" />{$paylist['pay_name']}<span></span></li>
+								<li class="pay card" data-value="{$paylist['id']}"><img src="{$paylist['pay_img']}" style="width: 36px;height: 36px" />{$paylist['pay_name']}<span></span></li>
 							{/volist}
 						</ul>
 					</div>
@@ -143,7 +143,8 @@
 														<span class="phone-title">购买数量</span>
 														<div class="sl">
 															<input class="min am-btn" name="reduceNum" type="button" value="-" />
-															<input class="text_box" name="" type="text" value="{$goodsList['goods']['num']}" style="width:30px;text-align: center;" />
+															<input class="text_box" name="goodsNum" onkeyup="this.value=value.replace(/[^\d]/g,'')" type="text" value="{$goodsList['goods']['num']}" style="width:30px;text-align: center;" />
+															<input type="hidden" name="goodsid" value="{$goodsList['goods']['goods_id']}">
 															<input class="add am-btn" name="addNum" type="button" value="+" />
 														</div>
 													</div>
@@ -180,7 +181,7 @@
 								<div class="order-user-info">
 									<div id="holyshit257" class="memo">
 										<label>买家留言：</label>
-										<input style="height: 30px;" type="text" title="选填,对本次交易的说明（建议填写已经和卖家达成一致的说明）" placeholder="选填,建议填写和卖家达成一致的说明" class="memo-input J_MakePoint c2c-text-default memo-close">
+										<input style="height: 30px;" type="text" name="liuyan" title="选填,对本次交易的说明（建议填写已经和卖家达成一致的说明）" placeholder="选填,建议填写和卖家达成一致的说明" class="memo-input J_MakePoint c2c-text-default memo-close">
 										<div class="msg hidden J-msg">
 											<p class="error">最多输入500个字符</p>
 										</div>
@@ -282,7 +283,8 @@
 
 									<div id="holyshit269" class="submitOrder" style="padding-top: 100px;">
 										<div class="go-btn-wrap">
-											<a id="J_Go" href="success.html" class="btn-go" tabindex="0" title="点击此按钮，提交订单">提交订单</a>
+											<input type="hidden" name="__ordertoken__"  value="{$Request.token}">
+											<a id="J_Go" href="javascript:void(0)" class="btn-go" tabindex="0" title="点击此按钮，提交订单">提交订单</a>
 										</div>
 									</div>
 									<div class="clear"></div>
@@ -293,6 +295,15 @@
 						<div class="clear"></div>
 					</div>
 				</div>
+<form id="order_goods_form" method="POST" action="">
+	<input type="hidden" name="order_wuliu" value="">
+	<input type="hidden" name="order_pay" value="">
+	<input type="hidden" name="order_address" value="">
+	<input type="hidden" name="order_goodsNum" value="">
+	<input type="hidden" name="order_goodsid" value="">
+	<input type="hidden" name="order_liuyan" value="">
+	<input type="hidden" name="__token__" value="{$Request.token}" />
+</form>
 				<div class="footer" style="display: none;">
 					<div class="footer-hd">
 						<p>
@@ -368,7 +379,7 @@
 								<small>100字以内写出你的详细地址...</small>
 							</div>
 						</div>
-
+						<input type="hidden" name="__token__"  value="{$Request.token}">
 						<div class="am-form-group theme-poptit" style="display: block;">
 							<div class="am-u-sm-9 am-u-sm-push-3">
 								<div class="am-btn am-btn-danger" id="addrSubmit">保存</div>
@@ -403,11 +414,18 @@
 				'url'  : '{:Url("pay/userAdd")}',
 				'data' : {'data':JSON.stringify(data)},
 				'dataType' : 'json',
-				success:function(){
-					alert(123);
+				success:function(data){
+					var data = JSON.parse(data);
+					if (data['code'] == 0) {
+						alert(data['msg']);
+					}else{
+						alert(data['msg']);
+						$('.close').trigger('click');
+						window.location.reload();
+					}
 				},
-				error:function(){
-					// alert(123);
+				error:function(data){
+					console.log(data);
 				}
 			})
 		})

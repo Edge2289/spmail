@@ -5,6 +5,7 @@ use think\Session;
 use think\Cache;
 use think\Db;
 use think\Loader;
+use think\Request;
 use app\common\redis\RedisClice;
 use app\index\common\Base;
 use app\index\model\Goods;
@@ -13,14 +14,17 @@ use app\index\model\Goods;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-08 17:44:38
+ * @Last Modified time: 2019-01-09 16:55:23
  */
 
 class Pay extends Base
 {
 
 	public function index(){
-        
+        // if ($this->request->isPost()) {
+        //     echo "非法操作";die;
+        // }
+
         $listAdd['type'] = explode(',', input('type'));
         $listAdd['num'] = input('num');
         $listAdd['id'] = input('id');
@@ -82,8 +86,41 @@ class Pay extends Base
      * [userAdd 用户地址添加]
      * @return [type] [description]
      */
-    public function userAdd(){
-        $data = input('post.data');
-        dd($data);
+    public function userAdd(Request $request){
+
+        $ajax = [
+            'code' => '0',
+            'msg' => "操作失败！",
+        ];
+
+        $user = Session::get('user_id');
+        if (empty($user)) {
+            $ajax['msg'] = "请登录！";
+            return json_encode($ajax);
+        }
+        if($this->request->isGet()){
+            return json_encode($ajax);
+        }
+
+        $data = json_decode(input('post.data'),true);
+        $valida = Loader::Validate('UserAddrValidate');
+        if (!$valida->check($data)) {
+           $ajax = [
+                'code' => '0',
+                'msg' => $valida->getError(),
+            ];
+        }else{
+            $data['user_id'] = $user;
+            $i = Db::table('shop_user_address')->insertGetId($data);
+            if ($i) {
+                $dataList = Db::table('shop_user_address')->where('address_id',$id)->find();
+                $ajax = [
+                    'code' => '1',
+                    'msg' => "添加成功！",
+                    'data' => $dataList,
+                ];  
+            }
+        }
+        return json_encode($ajax);
     }
 }
