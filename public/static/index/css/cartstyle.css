@@ -2,7 +2,7 @@
 body, button, input, select, textarea {
     font: 12px/1.5 arial,"Lantinghei SC","Microsoft Yahei";;
 }
-.concent{overflow:hidden; width:100%;max-width: 1000px;margin: 0px auto; margin-top:60px; }
+.concent{overflow:hidden; width:100%;margin: 0px auto; margin-top:60px; }
 .cart-table-th ,.td-sum{display: none;}
 
 /*title*/

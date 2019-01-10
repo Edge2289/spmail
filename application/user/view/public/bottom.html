@@ -21,7 +21,7 @@ $(document).ready(function(){
 		alert('暂不开放');
 	})
 	$('#shopCart').click(function(){
-			window.location.href ="{:Url('/user/cat/index')}?data=<?php echo json_decode(time());?>";
+			window.location.href ="{:Url('Route_user/shopcart')}?data=<?php echo json_decode(time());?>";
 	})
 	$('.right_login').click(function(){
 		window.location.href ="{:Url('login')}";
@@ -111,7 +111,7 @@ $(document).ready(function(){
 						<p>
 							购物车
 						</p>
-						<p class="cart_num">{$dataCat|count}</p>
+						<p class="cart_num">0</p>
 					</div>
 					<div id="asset" class="item">
 						<a href="{:Url('Route_user/index')}?person=points&data=<?php echo json_decode(time());?>">

@@ -111,7 +111,7 @@ $(document).ready(function(){
 						<p>
 							购物车
 						</p>
-						<p class="cart_num">0</p>
+						<p class="cart_num">{$dataCat|count}</p>
 					</div>
 					<div id="asset" class="item">
 						<a href="{:Url('Route_user/index')}?person=points&data=<?php echo json_decode(time());?>">

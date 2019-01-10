@@ -146,13 +146,13 @@
 											<form class="theme-signin" name="loginform" action="" method="post">
 
 												<div class="theme-signin-left">
-													
+												
 													{volist name="$item['spec']" id="spec"}
 														<div class="theme-options">
 															<div class="cart-title">{$spec['spec_name']}</div>
 															<ul class="J_TSaleProp">
 																{volist name="$spec['spec_list']" id="specId" key="k"}
-																	<li class="sku-line" data-id="{$specId['gs_name']}">{$specId['gs_text']}<i></i></li>
+																	<li class="sku-line" data-id="{$specId['gs_name']}" data-text="{$spec['spec_name']}：{$specId['gs_text']}">{$specId['gs_text']}<i></i></li>
 																{/volist}
 															</ul>
 														</div>
@@ -702,14 +702,18 @@
 //*****************************加入购物车   购买**************************************************************//	
 function buy(obj){
 	var spec = [];
+	var price = $('.sys_item_price').html();
 	var specList = [];
+	var specListText = [];
 	var i_s = 0;
 	var i_count = "{$item['spec']|count}";
+	var itemSpeclist = {$item['spec']|json_encode};
 	$('.J_TSaleProp li').each(function(){
 		if ($(this).hasClass('selected')) {
 			var s_p = $(this).attr('data-id').split('_');
 			spec[i_s] = s_p[1];
 			specList[i_s] = $(this).attr('data-id');
+			specListText[i_s] = $(this).attr('data-text');
 			i_s++;
 		}
 	})
@@ -732,6 +736,32 @@ function buy(obj){
 			}
 			// LikBasket  购物车 LikBuy  下单
 			if ($(obj).attr('data-id') == "LikBasket") {
+				$(".cart_num").html(parseInt($(".cart_num").html())+1);
+				var dataCat = {
+						"catSpeclist" : specList,
+						"num" : $("#text_box").val(),
+						"goods_id" : "{$item['goods']['goods_id']}",
+						"goods_name" : "{$item['goods']['goods_name']}",
+						"goods_price" : price,
+						"itemSpeclist":itemSpeclist,
+						"specListText":specListText,
+						"store_count" : "{$item['goods']['store_count']}",
+						"original_img" : "{$item['goods']['original_img']}",
+					};
+				$.ajax({
+					'type' : 'post',
+					'url'  : '{:Url("User/Cat/cookieCat")}',
+					'data' : {"dataCat":JSON.stringify(dataCat)},
+					'dataType' : 'json',
+					success:function(data){
+						var data = JSON.parse(data);
+						alert(data['msg']);
+					},
+					error:function(){
+						console.log("你真坏！");
+					}
+				})
+
 
 			}else if ($(obj).attr('data-id') == "LikBuy"){
 				$('#type').attr('value',specList);

@@ -21,7 +21,7 @@ $(document).ready(function(){
 		alert('暂不开放');
 	})
 	$('#shopCart').click(function(){
-			window.location.href ="{:Url('/user/cat/index')}?data=<?php echo json_decode(time());?>";
+			window.location.href ="{:Url('Route_user/shopcart')}?data=<?php echo json_decode(time());?>";
 	})
 	$('.right_login').click(function(){
 		window.location.href ="{:Url('login')}";
@@ -111,7 +111,7 @@ $(document).ready(function(){
 						<p>
 							购物车
 						</p>
-						<p class="cart_num">{$dataCat|count}</p>
+						<p class="cart_num">0</p>
 					</div>
 					<div id="asset" class="item">
 						<a href="{:Url('Route_user/index')}?person=points&data=<?php echo json_decode(time());?>">
@@ -284,31 +284,26 @@ $(document).ready(function(){
 	<div class="bottom_link">
 		<div class="border_link">
 
-<?php
-
-foreach($link_one as $value){
-echo "<div class='item_1 fl'><h3>".$value."</h3><ul>";
-$index = $value;
-	foreach($linka as $value){
-		if($index == $value["ac_title"]){
-			echo "<li><a href='' target='_blank' >".$value['al_title']."</a></li>";
-		}
+	<?php
+	$var = 1;
+	for($i = 0 ; $i < 5; $i++){
+		$y = 0 ;
+			for($b = 0 ; $b < 13; $b++){
+				for($a = 0 ; $a < 13; $a++){
+					if("0_".$y."_".$var == $buttom_conter[$a]['optimi_order']){
+							if($y == 0){
+							echo "<div class='item_1 fl'><h3>".$buttom_conter[$a]['optimi_name']."</h3><ul>";
+						}else{
+							echo "<li><a href='".$buttom_conter[$a]['optimi_url']."' target='_blank' title=".$buttom_conter[$a]['optimi_name'].">".$buttom_conter[$a]['optimi_name']."</a></li>";
+						}	
+						$y++;
+					}
+				}
+			}
+		echo "</ul></div>";
+		$var++ ;
 	}
-echo "</ul></div> ";
-}
-
-
-
-?>
-
-<!-- 
-<div class='item_1 fl'><h3>123</h3><ul>
-<li><a href='' target='_blank' >123</a></li>
-</ul></div> 
--->
-
-
-
+	?>
 			<div class="foot_telnum">
 				<p><span>123</span></p><br>
 				<span class="font14 cfen">周一 至 周五　8:30-18:00</span>
