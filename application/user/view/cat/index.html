@@ -43,7 +43,7 @@
 										</li>
 										<li class="td td-item">
 											<div class="item-pic">
-												<a href="#" target="_blank" data-title="{$dataCatList['goods_name']}" class="J_MakePoint" data-point="tbcart.8.12">
+												<a href="{:Url('index/Introduction/index')}/id/{$dataCatList['goods_id']}" target="_blank" data-title="{$dataCatList['goods_name']}" class="J_MakePoint" data-point="tbcart.8.12">
 													<img src="__STATIC_imgage__/images/kouhong.jpg_80x80.jpg" class="itempic J_ItemImg"></a>
 											</div>
 											<div class="item-info">
@@ -57,16 +57,13 @@
 												{volist name="$dataCatList['specListText']" id="specListText"}
 													<span class="sku-line">{$specListText}</span>
 												{/volist}
-												<span tabindex="0" class="btn-edit-sku theme-login">修改</span>
+												<span tabindex="0" data-list_speclist='{$dataCatList['itemSpeclist']|json_encode}' class="btn-edit-sku theme-login">修改</span>
 												<i class="theme-login am-icon-sort-desc"></i>
 											</div>
 										</li>
 										<li class="td td-price">
 											<div class="item-price price-promo-promo">
 												<div class="price-content">
-													<!-- <div class="price-line">
-														<em class="price-original">{$dataCatList['goods_price']}</em>
-													</div> -->
 													<div class="price-line">
 														<em class="J_Price price-now" tabindex="0">{$dataCatList['goods_price']}</em>
 													</div>
@@ -78,7 +75,7 @@
 												<div class="item-amount ">
 													<div class="sl">
 														<input class="min am-btn" name="" type="button" value="-" />
-														<input class="text_box" name="" type="text" value="{$dataCatList['num']}" style="width:30px;" />
+														<input class="text_box" name="" maxlength="2" type="text" value="{$dataCatList['num']}" style="width:30px;" />
 														<input class="add am-btn" name="" type="button" value="+" />
 													</div>
 												</div>
@@ -86,7 +83,7 @@
 										</li>
 										<li class="td td-sum">
 											<div class="td-inner">
-												<em tabindex="0" class="J_ItemSum number"><?php echo (float)$dataCatList['goods_price']*$dataCatList['num']?></em>
+												<em tabindex="0" class="J_ItemSum number"></em>
 											</div>
 										</li>
 										<li class="td td-op">
@@ -156,20 +153,13 @@
 
 						<div class="theme-signin-left">
 
-							<li class="theme-options">
-								<div class="cart-title">颜色：</div>
-								<ul>
-									<li class="sku-line selected">12#川南玛瑙<i></i></li>
-									<li class="sku-line">10#蜜橘色+17#樱花粉<i></i></li>
-								</ul>
-							</li>
-							<li class="theme-options">
+							<!-- <li class="theme-options">
 								<div class="cart-title">包装：</div>
 								<ul>
 									<li class="sku-line selected">包装：裸装<i></i></li>
 									<li class="sku-line">两支手袋装（送彩带）<i></i></li>
 								</ul>
-							</li>
+							</li> -->
 							<div class="theme-options">
 								<div class="cart-title number">数量</div>
 								<dd>
@@ -209,21 +199,6 @@
 		</div>
 
 <script>
- $(document).ready(function(){
-	//全选
-	$('#J_SelectAllCbx2').change(function(){
-		if($(this).is(':checked')){
-			$('.clearfix li').each(function(){
-				$(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked','checked');//this指当前的html对象
-			})
-		}else{
-			$('.clearfix li').each(function(){
-				$(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked',false);//this指当前的html对象
-			})
-		}
-	});
-		 	
-	})
 // 弹出规格选择
  /*
  
@@ -239,13 +214,19 @@
  $(document).ready(function(){
 
      $(function(){
+     	/******************  添加数量  *********************************/
          $(".add").click(function(){
           var t=$(this).parent().find('input[class*=text_box]');
-         t.val(parseInt(t.val())+1)
+          if ((parseInt(t.val())+1)>100) {
+         	t.val('100')
+          }else{
+         	t.val(parseInt(t.val())+1)
+          }
          var price = $(this).parents().parents().parents().parents().prev('.td-price').children('.item-price').children('.price-content').children('.price-line').children('.J_Price').html();
          $(this).parents().parents().parents().parents().next().children('.td-inner').children('.J_ItemSum').html(parseInt(price)*parseInt(t.val()));
          countItem();
         })
+     	/******************  减少数量  *********************************/
       $(".min").click(function(){
        var t=$(this).parent().find('input[class*=text_box]');
          t.val(parseInt(t.val())-1)
@@ -256,7 +237,21 @@
          $(this).parents().parents().parents().parents().next().children('.td-inner').children('.J_ItemSum').html(parseInt(price)*parseInt(t.val()));
          countItem();
        })
-
+//全选
+	$('#J_SelectAllCbx2').change(function(){
+		if($(this).is(':checked')){
+			$('.clearfix li').each(function(){
+				$(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked','checked');//this指当前的html对象
+			})
+			countItem();
+		}else{
+			$('.clearfix li').each(function(){
+				$(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked',false);//this指当前的html对象
+			})
+			countItem();
+		}
+	});
+     	/******************    总价格显示  **************************/
       function countItem(){
       		var count = 0;
       		var IntCount = 0;
@@ -269,7 +264,26 @@
       		$('#J_Total').html(count);
       		$('#J_SelectedItemsCount').html(IntCount);
       }
-
+      /***********     勾选复选框得时候选择显示      ****************/
+      $('.clearfix li').each(function(){
+      		var obj = $(this).children('.cart-checkbox').children('input[name="items[]"]');
+      		var next = $(this);
+      		$(obj).click(function(){
+      			countItem();
+      		})
+		})
+      function clearCheck(){
+      	$('.clearfix li').each(function(){
+      		$(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked',false);
+      		$('#J_SelectAllCbx2').attr('checked',false);
+      		var obj = $(this).children('.cart-checkbox').children('input[name="items[]"]');
+      		var Price = $(this).next().next().next().children('.item-price').children('.price-content').children('.price-line').children('.J_Price').html();
+      		var num = $(this).next().next().next().next().children('.amount-wrapper').children('.item-amount').children('.sl').children('.text_box').val();
+      		$(this).next().next().next().next().next().children('.td-inner').children('.J_ItemSum').html(parseInt(Price)*parseInt(num));
+		})
+      }
+      clearCheck();
+      countItem();
     }) 
 	    if (!document.getElementsByClassName) {
         document.getElementsByClassName = function (cls) {
@@ -305,10 +319,6 @@ $(function(){
 
 })
  
- 
- 
- 
- 
 })
  
 // 弹出规格选择
@@ -319,7 +329,9 @@ $(function(){
 				var $ww = $(window).width();
 	
 				$('.theme-login').click(function() {
-//					禁止遮罩层下面的内容滚动
+					alert("暂不开放");
+					return false;
+					//禁止遮罩层下面的内容滚动
 					// $(document.body).css("position","fixed");
 					$('.btn-op').show();
 					$(this).addClass("selected");
@@ -333,17 +345,17 @@ $(function(){
 					$('.theme-popover-mask').height($(document).height());
 					$('.theme-popover').slideDown(200);
 					
-			   if ($ww>640){
-					$('.theme-popover').css("top",th);
-					$('.theme-popover').css("left",tl);
-					$('.theme-popover-mask').hide();
+			   		if ($ww>640){
+						$('.theme-popover').css("top",th);
+						$('.theme-popover').css("left",tl);
+						$('.theme-popover-mask').hide();
 				 	}					
-			   if ($ww>1024){				
-					$('.theme-popover').css("top",to);
-					$('.theme-popover').css("left",tl);
-					$('.theme-popover-mask').hide();
-				 	}													
-					
+			   		if ($ww>1024){				
+						$('.theme-popover').css("top",to);
+						$('.theme-popover').css("left",tl);
+						$('.theme-popover-mask').hide();
+				 	}	
+				 	dataSpcelist($(this).data('list_speclist'));		
 				})
 				$('.theme-poptit .close,.btn-op .close').click(function() {
 					$(document.body).css("position","static");
@@ -356,6 +368,22 @@ $(function(){
 					$('.theme-popover').slideUp(200);
 				})
 
+			function dataSpcelist(dsl)
+			{
+				var html = '';
+				for (var iy in dsl) {
+				console.log(iy);
+					html += '<li class="theme-options">'+
+								'<div class="cart-title" data-spec_name="'+dsl[iy]['spec_name']+'" data-spec_id="'+dsl[iy]['spec_id']+'">'+dsl[iy]['spec_name']+'</div>'+
+								'<ul>';
+						for(var sp_z in dsl[iy]['spec_list']){
+								html += '<li class="sku-line selected" data-gs_name="'+dsl[iy]['spec_list'][sp_z]['gs_text']+'"  data-gs_id="'+dsl[iy]['spec_list'][sp_z]['gs_name']+'">"'+dsl[iy]['spec_list'][sp_z]['gs_text']+'"<i></i></li>';
+						}
+									
+					html += '</ul></li>';
+				}
+				$('.theme-signin-left').prepend(html);
+			}
 				
 			}); 
 

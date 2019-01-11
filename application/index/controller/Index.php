@@ -11,6 +11,7 @@ use app\index\model\Goods;
 use think\viewport;
 use think\Request;
 use think\Session;
+use think\Cookie;
 use think\Cache;
 use think\Db;
 
@@ -19,6 +20,11 @@ use think\Db;
 
 class Index extends Base
 {
+    public function _initialize(){
+        $this->assign([
+            'dataCat' => json_decode(Cookie::get('dataCat'),true),
+        ]);
+    }
 
 	//显示index
     public function index()
