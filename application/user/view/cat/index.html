@@ -38,7 +38,7 @@
 									<ul class="item-content clearfix">
 										<li class="td td-chk" style="top: 40px">
 											<div class="cart-checkbox ">
-												<input class="check" id="J_CheckBox" name="items[]" value="{$dataCatList['goods_id']}" type="checkbox">
+												<input class="check" id="J_CheckBox" name="items[]" data-catSpeclist='{$dataCatList['catSpeclist']|json_encode}' data-store_count="{$dataCatList['store_count']}" value="{$dataCatList['goods_id']}" type="checkbox">
 											</div>
 										</li>
 										<li class="td td-item">
@@ -132,8 +132,8 @@
 							<span class="txt">合计:</span>
 							<strong class="price">¥<em id="J_Total">0.00</em></strong>
 						</div>
-						<div class="btn-area">
-							<a href="pay.html" id="J_Go" class="submit-btn submit-btn-disabled" aria-label="请注意如果没有选择宝贝，将无法结算">
+						<div class="btn-area" style="cursor: pointer;" id="J_Go">
+							<a href="javascript:void(0)" class="submit-btn submit-btn-disabled" title="请注意如果没有选择宝贝，将无法结算">
 								<span>结&nbsp;算</span></a>
 						</div>
 					</div>
@@ -286,7 +286,7 @@
       countItem();
     }) 
 	    if (!document.getElementsByClassName) {
-        document.getElementsByClassName = function (cls) {
+        	document.getElementsByClassName = function (cls) {
             var ret = [];
             var els = document.getElementsByTagName('*');
             for (var i = 0, len = els.length; i < len; i++) {
@@ -318,7 +318,43 @@ $(function(){
 	})
 
 })
- 
+ /***************************  结算 ***********************************/
+	 $("#J_Go").click(function(){
+	 	var checkNum = 0;
+	 	var is_login = "{$Request.session.user}";
+	 	var dataCat = [];
+	 	$('.clearfix li').each(function(){
+	 		var obj = $(this).children('.cart-checkbox').children('input[name="items[]"]');
+			var type = $(this).children('.cart-checkbox').children('input[name="items[]"]').attr('checked');//this指当前的html对象
+			var num = $(this).next().next().next().next().children('.amount-wrapper').children('.item-amount').children('.sl').children('.text_box').val();
+			if (type) {
+				var itemList = JSON.parse($(obj).attr('data-catspeclist'));
+				var itemtext = '';
+				for(var i in itemList){
+					itemtext += itemList[i]+',';
+				}
+				var data = {
+					'type1' : itemtext.substr(0,itemtext.length-1),
+					'type' : itemList,
+					'num' : num,
+					'store_count' : $(obj).data('store_count'),
+					'id' : $(obj).val(),
+				};
+				dataCat[checkNum] = data;
+				checkNum++;
+			}
+		})
+	 	if (checkNum == 0) {
+			alert("请选择商品后结算");
+	 	}else if (is_login == '') {
+			alert("请登录后操作");
+			window.location.href = '{:url("/index/index/login")}';
+			return false;
+		}else{
+			/**  获取要传的值到控制器上面 catSpeclist   store_count  */
+			window.location.href = '{:Url("/index/pay/catPay")}?commit='+window.btoa(JSON.stringify(dataCat));
+		}
+	 })
 })
  
 // 弹出规格选择

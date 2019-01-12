@@ -12,7 +12,7 @@ use app\user\common\Base;
  * @Author: 小小
  * @Date:   2018-12-19 11:28:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-11 17:52:23
+ * @Last Modified time: 2019-01-12 09:45:54
  */
 
 class Cat extends Base
@@ -48,8 +48,11 @@ class Cat extends Base
             'linka' => $linka,
             'link_one' => $link_one,
             'link' => $link,
+            'dataCat' => json_decode(cookie::get('dataCat'),true),
         ]);
 	}
+
+
 	public function index(){
 		// dd(json_decode(cookie::get('dataCat'),true));
 		 $this->assign([

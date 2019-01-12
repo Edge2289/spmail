@@ -724,7 +724,7 @@ function buy(obj){
 		alert("请选择商品属性");
 	}else{
 		var is_login = "{$Request.session.user}";
-		if (is_login == '') {
+		if (is_login == '' && $(obj).attr('data-id') != "LikBasket") {
 			alert("请登录");
 			window.location.href = '{:url("index/login")}';
 			return false;

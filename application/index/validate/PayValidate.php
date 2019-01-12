@@ -6,10 +6,10 @@ use think\Validate;
  * @Author: 小小
  * @Date:   2019-01-04 11:01:50
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-04 14:05:22
+ * @Last Modified time: 2019-01-12 09:31:05
  */
 
-class IntroValidate extends Validate
+class PayValidate extends Validate
 {
 	// 验证的数据
 	protected $rule = [

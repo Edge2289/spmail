@@ -9,7 +9,7 @@ use app\index\model\Goods_cate;
  * @Author: 小小
  * @Date:   2018-12-20 14:21:21
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-05 16:47:47
+ * @Last Modified time: 2019-01-12 10:36:10
  */
 
 class Goods extends Model
@@ -124,7 +124,7 @@ class Goods extends Model
 	}
 
 	public static function goodsPay($data){
-		// 遍历操作
+		// 单个操作
 				$item_id = '';
 			for ($y=0; $y < count($data['type']); $y++) { 
 				$name = explode("_", $data['type'][$y]);
@@ -145,8 +145,8 @@ class Goods extends Model
 				$item_id .= '_'.$name[1];
 			}
 			$list[$i]['item'] = Db::table('shop_goods_price')->where('item_id',substr($item_id, 1))->field('item_name,price')->find();
-			$list[$i]['goods'] = self::get($data[$i]['id'])->visible(['goods_id','is_free_shipping','goods_sn','goods_name','market_price','shop_price'])->toArray();
-			$list[$i]['goods']['num'] = $data['num'];
+			$list[$i]['goods'] = self::get($data[$i]['id'])->visible(['goods_id','is_free_shipping','goods_sn','goods_name','original_img','market_price','shop_price'])->toArray();
+			$list[$i]['goods']['num'] = $data[$i]['num'];
 		}
 		return json_encode($list);
 	}

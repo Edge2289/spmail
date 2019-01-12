@@ -111,6 +111,33 @@
  
 //地址选择
 				$(function() {
+					$('.item-content').each(function(){
+						var objmin = $(this).children('.td-amount').children('.amount-wrapper').children('.item-amount').children('.sl').children('#min');
+						var number = $(this).children('.td-sum').children('.td-inner').children('.J_ItemSum');
+						var Price = $(this).children('.pay-phone').children('.td-price').children('.item-price').children('.price-content').children('.J_Price');
+						var objadd = $(this).children('.td-amount').children('.amount-wrapper').children('.item-amount').children('.sl').children('#add');
+						$(objmin).click(function(){
+							$(objmin).next().val(parseInt($(objmin).next().val())-1);
+							$(number).html(parseInt($(objmin).next().val())*parseInt($(Price).html()));
+							countItem();
+						})
+						$(objadd).click(function(){
+							$(objadd).prev().prev().val(parseInt($(objadd).prev().prev().val())+1);
+							$(number).html(parseInt($(objmin).next().val())*parseInt($(Price).html()));
+							countItem();
+						})
+		      		})
+		      		/******************    总价格显示  **************************/
+		      function countItem(){
+		      		var count = 0;
+		      		var IntCount = 0;
+		      		$('.item-content').each(function(){
+		      			var number = $(this).children('.td-sum').children('.td-inner').children('.J_ItemSum');
+						count += parseInt($(number).html());
+		      		})
+		      		$('#J_ActualFee').html(count);
+		      		$('.pay-sum').html(count);
+		      }
 					/**
 					 * [buy-user   名字]
 					 * [buy-phone   电话]
