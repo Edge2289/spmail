@@ -170,7 +170,6 @@ class Pay extends Base
        $pay = Db::table('shop_pay')->where('static',0)->field('id,pay_name,pay_img')->select();
         /*****************************************************************/
         $this->linkbutton();
-        // dd($goodsData);
         $this->assign([
                 'userAdd' => $userAdd,
                 'kuaidi' => $kuaidi,

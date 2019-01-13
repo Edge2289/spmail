@@ -5,10 +5,21 @@
 		var wuliu = '';
 		var pay = '';
 		var address = '';
-		var goodsNum = $('input[name="goodsNum"]').val();
-		var goodsid  = $('input[name="goodsid"]').val();
-		var liuyan  = $('input[name="liuyan"]').val();
-
+		var goodsList = new Array();
+		var goodsSum = 0;
+/************/
+$('.item-content').each(function(){
+	var goodsNum = $(this).children('.td-amount').children('.amount-wrapper').children('.item-amount').children('.sl').children('.text_box').val();
+	var goodsid = $(this).children('.td-amount').children('.amount-wrapper').children('.item-amount').children('.sl').children('input[name="goodsid"]').val();
+	var itemId = $(this).children('.pay-phone').children('.td-info').children('.item-props').children('.sku-line').attr('data-itemid');
+	goodsList[goodsSum] = {
+		'goodsNum' : goodsNum,
+		'goodsid' : goodsid,
+		'itemId' : itemId,
+	};
+	goodsSum++;
+})
+/**************/
 
 		$fujian = {
 			'wuliu' : "请选择物流方式",
@@ -51,22 +62,27 @@
 			alert($fujian['address']);
 			return false;
 		}
-		if (goodsid == '') {
-			alert($fujian['goodsid']);
-			return false;
-		}
-		if (goodsNum == '') {
-			alert($fujian['goodsNum']);
-			return false;
-		}
 
-		$('input[name="order_goodsNum"]').val(goodsNum);
-		$('input[name="order_goodsid"]').val(goodsid);
-		$('input[name="order_liuyan"]').val(liuyan);
-		$('input[name="order_wuliu"]').val(wuliu);
-		$('input[name="order_pay"]').val(pay);
-		$('input[name="order_address"]').val(address);
+		var data ={
+			'goodslist' : goodsList,
+			'liuyan' : $('input[name="liuyan"]').val(),
+			'wuliu' : wuliu,
+			'pay' : pay,
+			'address' : address,
+		};
+		/******   ajax 提交  */
+		$.ajax({
+			'type' : 'post',
+			'url'  : "/index/order/sureOrder",
+			'data' : {data:window.btoa(JSON.stringify(data))},
+			'dataType' : 'json',
+			success:function(){
 
+			},
+			error:function(){
+				console.log('网络错误');
+			}
+		})
 		
 
 	})

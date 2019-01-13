@@ -125,12 +125,24 @@ class Goods extends Model
 
 	public static function goodsPay($data){
 		// 单个操作
-				$item_id = '';
+				$item_id = array();
+				$item_id2 = '';
 			for ($y=0; $y < count($data['type']); $y++) { 
 				$name = explode("_", $data['type'][$y]);
-				$item_id .= '_'.$name[1];
+				$item_id[$y] = $name[1];
+				$item_id2 .= $data['type'][$y].',';
 			}
-			$list['item'] = Db::table('shop_goods_price')->where('item_id',substr($item_id, 1))->field('item_name,price')->find();
+			$itemList = Db::table('shop_goods_price')
+									->where('goods_id',$data["id"])
+									->field('item_name,item_id,price')
+									->select();
+			foreach ($itemList as $key => $value) {
+				if (empty(array_diff(explode('_',$value['item_id']),$item_id))) {
+					$list['item']['price'] = $value['price'];
+					$list['item']['item_name'] = $value['item_name'];
+				}
+			}
+			$list['item']['itemSpeclist'] = substr($item_id2,0,-1);
 			$list['goods'] = self::get($data['id'])->visible(['goods_id','is_free_shipping','goods_sn','original_img','goods_name','market_price','shop_price'])->toArray();
 			$list['goods']['num'] = $data['num'];
 		return json_encode($list);
@@ -139,13 +151,25 @@ class Goods extends Model
 	public static function goodsListPay($data){
 		// 遍历操作
 		for ($i=0; $i < count($data); $i++) { 
-				$item_id = '';
+				$item_id = array();
 			for ($y=0; $y < count($data[$i]['type']); $y++) { 
 				$name = explode("_", $data[$i]['type'][$y]);
-				$item_id .= '_'.$name[1];
+				$item_id[$y] = $name[1];
 			}
-			$list[$i]['item'] = Db::table('shop_goods_price')->where('item_id',substr($item_id, 1))->field('item_name,price')->find();
-			$list[$i]['goods'] = self::get($data[$i]['id'])->visible(['goods_id','is_free_shipping','goods_sn','goods_name','original_img','market_price','shop_price'])->toArray();
+			$itemList = Db::table('shop_goods_price')
+									->where('goods_id',$data[$i]["id"])
+									->field('item_name,item_id,price')
+									->select();
+			foreach ($itemList as $key => $value) {
+				if (empty(array_diff(explode('_',$value['item_id']),$item_id))) {
+					$list[$i]['item']['price'] = $value['price'];
+					$list[$i]['item']['item_name'] = $value['item_name'];
+				}
+			}
+			$list[$i]['item']['itemSpeclist'] = $data[$i]['type1'];
+			$list[$i]['goods'] = self::get($data[$i]['id'])
+									->visible(['goods_id','is_free_shipping','goods_sn','goods_name','original_img','market_price','shop_price'])
+									->toArray();
 			$list[$i]['goods']['num'] = $data[$i]['num'];
 		}
 		return json_encode($list);
