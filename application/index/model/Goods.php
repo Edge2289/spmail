@@ -9,7 +9,7 @@ use app\index\model\Goods_cate;
  * @Author: 小小
  * @Date:   2018-12-20 14:21:21
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-12 10:36:10
+ * @Last Modified time: 2019-01-15 15:13:39
  */
 
 class Goods extends Model
@@ -174,5 +174,76 @@ class Goods extends Model
 		}
 		return json_encode($list);
 	}
+
+	/**
+	 * [OrderStatus 订单验证商品是否可用之类]
+	 * @param [type] $goodsid   [商品id]
+	 * @param [type] $goodsnum  [商品数量]
+	 * @param [type] $goodsitem [商品规格]
+	 */
+	public static function OrderStatus($data){
+		$reData = [];
+		$reList = [];
+		$selfGoods = self::get($data['goodsid']);
+		if(!empty($selfGoods) && !empty($selfGoods['is_on_sale'])){
+			// 获取规格属性，遍历判断
+			$dataArr = Db::table('shop_goods_price')
+									->where('goods_id',$data["goodsid"])
+									->field('item_name,item_id,price,store_count,price')
+									->select();
+			// 解析前端过来的数据做数组对比
+			$dataItem = explode(',', $data['itemId']);
+			$item = array();
+			foreach ($dataItem as $key => $value) {
+				$v1 = explode('_', $value);
+				$item[$key] = $v1[1];
+			}
+			// 对比数组
+			foreach ($dataArr as $key => $value) {
+				if (empty(array_diff(explode('_',$value['item_id']),$item))) {
+					if ($value['store_count'] >= $data['goodsNum']) {
+						$reList['price'] = $value['price'];
+						$reList['item_name'] = $value['item_name'];
+						$reList['item_id'] = $value['item_id'];
+						$reList['goodsid'] = $data['goodsid'];
+						$reList['goodsnum'] = $data['goodsNum'];
+						$reData = [
+							'status' => 1,
+							'msg'    => "",
+							'data'   => $reList,
+						];
+					}else{
+						// 库存不足
+						$reData = [
+							'status' => 0,
+							'msg'    => "商品库存不足",
+							'data'   => $reList,
+						];
+					}
+				}
+			}
+		}else{
+			$reData = [
+					'status' => 0,
+					'msg'    => "商品不存在,或以下架",
+					'data'   => $reList,
+				];
+		}
+		return json_encode($reData);	
+	}
+
+	public static function reitemId($goodsid,$item_id){
+		$item_arr = explode('_', $item_id);
+		$itemList = Db::table('shop_goods_price')
+									->where('goods_id',$goodsid)
+									->field('price_id,item_name,item_id')
+									->select();
+			foreach ($itemList as $key => $value) {
+				if (empty(array_diff(explode('_',$value['item_id']),$item_arr))) {
+					return $value['price_id'];
+				}
+			}
+	}
+
 
 }

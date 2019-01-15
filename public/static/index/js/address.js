@@ -69,6 +69,8 @@ $('.item-content').each(function(){
 			'wuliu' : wuliu,
 			'pay' : pay,
 			'address' : address,
+			'time' : new Date().getTime(),
+			'__token__' : '{:token()}',
 		};
 		/******   ajax 提交  */
 		$.ajax({

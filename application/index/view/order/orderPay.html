@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>订单提交成功</title>
+<link rel="stylesheet"  type="text/css" href="__STATIC_index__/AmazeUI-2.4.2/assets/css/amazeui.css"/>
+<link href="__STATIC_index__/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css">
+<link href="__STATIC_index__/basic/css/demo.css" rel="stylesheet" type="text/css" />
+
+<link href="__STATIC_index__/css/sustyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__STATIC_index__/basic/js/jquery-1.7.min.js"></script>
+<style>
+	.er-box{
+		    width: 300px;
+			height: 465px;
+			background-color: #FFFFFF;
+			padding: 10px;
+			-webkit-box-shadow: 3px 3px 5px #CCCCCC;
+			-moz-box-shadow: 3px 3px 5px #CCCCCC;
+			box-shadow: 3px 3px 5px #CCCCCC;
+			border-top: 1px solid #EAEAEA;
+			border-left: 1px solid #EAEAEA;
+			margin: 80px auto 0 auto;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+			color: #FFFFFF;
+	}
+	.er-box .tx {
+		text-align: center;
+		margin: 10px;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	.er-box .er {
+		text-align: center;
+		padding: 0;
+		margin: 0;
+		width: 280px;
+		height: 280px;
+		background-color: #FFFFFF;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+	.er-box .er img {
+		display: block;
+		width: 280px;
+		height: 280px;
+		padding: 0;
+		margin: 0;
+	}
+	.er-box .pic {
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		margin-top: 18px;
+		font-size: 13px;
+	}
+	.er-box .pic div {
+		flex-grow: 1;
+		text-align: center;
+	}
+	.er-box .pic div img {
+		display: block;
+		width: 50px;
+		height: 50px;
+		margin: 0 auto;
+	}
+</style>
+</head>
+
+<body style="">
+
+<div class="clear"></div>
+
+
+
+<div class="take-delivery">
+ <div class="status">
+   <h2>
+   	<!-- <img src="../images/T13iv.XiFdXXa94Hfd-32-32.png" alt="" style="margin-right: 10px;" /> -->
+   订单提交成功，请尽快付款！订单号：2019011213122611</h2>
+   <div class="successInfo">
+     <ul>
+       <li>付款金额<em style="font-size: 30px;">¥9.90</em></li>
+	   </br>
+	   <li style="font-size: 18px;">请在<span style="color: #e53d1c;">60分钟</span>内完成支付</li>
+       <div class="user-info">
+         <p>收货人：艾迪</p>
+         <p>联系电话：15871145629</p>
+         <p>收货地址：湖北省 武汉市 武昌区 东湖路75号众环大厦</p>
+       </div>
+             <span style="color: #020202">请认真核对您的收货信息，如有错误请联系客服</span>                     
+     </ul>
+	 <!--  用户余额支付  -->
+	 <div style="border: 1px solid #e0e0e0;padding: 10px;margin-top: 30px;">
+	 	<div>支付方式：<span style="color: #e53d1c;">在线支付</span></div>
+	 	<br />
+		请输入密码：<input type="text" name="pay" />
+		<input type="submit" name="submit" value="提交" />
+	 </div>
+	 <!--  用户余额支付  -->
+	 <!--  第三方支付 -->
+	 <div class="er-box" style="display: none;background-color:#1296db;">
+		<div class="tx"> 
+			
+				支付宝扫码
+			
+		</div>
+		<div class="er">
+			<img src="/pay_get_qr_code?order_sn=2019011213122611&amp;paytype=A01&amp;r=0.8492524925910356" id="qr-code">
+		</div>
+		<div class="pic">
+			<div>
+				<img src="http://www.365goodlife.com/static/home/img/pay_wx_ali_1.png">
+				
+					打开支付宝
+				
+			</div>
+			<div>
+				<img src="http://www.365goodlife.com/static/home/img/pay_wx_ali_2.png">
+				扫描二维码
+			</div>
+			<div>
+				<img src="http://www.365goodlife.com/static/home/img/pay_wx_ali_3.png">
+				支付成功
+			</div>
+		</div>
+	</div>
+	 <!-- **************************** -->
+		 <div class="option">
+		   <span class="info">您可以</span>
+			<a href="../person/order.html" class="J_MakePoint">查看<span>已买到的宝贝</span></a>
+			<a href="../person/orderinfo.html" class="J_MakePoint">查看<span>交易详情</span></a>
+		 </div>
+		</div>
+	  </div>
+</div>
+
+<!-- 
+	支付宝颜色：#1296db
+	微信颜色：#42b035
+ -->
+
+
+</body>
+</html>

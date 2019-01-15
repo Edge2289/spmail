@@ -17,7 +17,7 @@ use app\common\api\wxpay\Wxpay;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-12 17:28:44
+ * @Last Modified time: 2019-01-15 11:34:36
  */
 
 class Pay extends Base

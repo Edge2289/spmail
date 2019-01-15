@@ -28,7 +28,7 @@ class Base extends Controller
     public function redisConfig()
     {
         $conf = [
-            'host' =>  '120.79.65.240', // 127.0.0.1
+            'host' =>  '127.0.0.1', // 127.0.0.1 120.79.65.240
             'port' =>  '6379',
             'auth' =>  '3600',
             'index' =>  '11'

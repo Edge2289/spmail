@@ -64,7 +64,7 @@ class Configtemplate extends Base
 						}
 						// 提交事务
 						$list['core'] = 1;
-					$list['message'] = "更新成功";
+						$list['message'] = "更新成功";
                         Db::commit();
 					} catch (Exception $e) {
 						$list['message'] = $e->getMessage();

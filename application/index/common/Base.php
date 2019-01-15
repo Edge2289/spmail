@@ -18,7 +18,7 @@ class Base extends Controller
     public function redisConfig()
     {
         $conf = [
-            'host' =>  '120.79.65.240', // 127.0.0.1
+            'host' =>  '120.79.65.240', // 127.0.0.1  120.79.65.240
             'port' =>  '6379',
             'auth' =>  '3600',
             'index' =>  '11'
@@ -27,25 +27,34 @@ class Base extends Controller
     }
     
 //密码盐
-    function make_password( $length = 6 ) 
+    function make_password($length = 6) 
     { 
   
     // 密码字符集，可任意添加你需要的字符 
-    $chars = array('a','b','c','d','e','f','g','h',
-    'i','j','k','l','m','n','o','p','q','r','s',
-    't','u','v','w','x','y','z','A','B','C','D',
-    'E','F','G','H','I','J','K','L','M','N','O',
-    'P','Q','R','S','T','U','V','W','X','Y','Z',
-    '0','1','2','3','4','5','6','7','8','9','!',
-    '@','#','$','%','^','&','*','(',')','-','_',
-    '[',']','{','}','<','>','~','`','+','=',',',
-    '.',';',':','/','?','|');
-    $password = '';
-    for($i = 0;$i < $length;$i++) 
-    { 
-    $password .= $chars[rand(0,count($chars))];
-    } 
-    return $password;
+        $chars = array('a','b','c','d','e','f','g','h',
+        'i','j','k','l','m','n','o','p','q','r','s',
+        't','u','v','w','x','y','z','A','B','C','D',
+        'E','F','G','H','I','J','K','L','M','N','O',
+        'P','Q','R','S','T','U','V','W','X','Y','Z',
+        '0','1','2','3','4','5','6','7','8','9','!',
+        '@','#','$','%','^','&','*','(',')','-','_',
+        '[',']','{','}','<','>','~','`','+','=',',',
+        '.',';',':','/','?','|');
+        $password = '';
+        for($i = 0;$i < $length;$i++) 
+        { 
+            $password .= $chars[rand(0,count($chars)-1)];
+        } 
+            return $password;
+    }
+    function make_shuzi($length = 6){
+        $chars = array(1,2,3,4,5,6,7,8,9,0);
+        $password = '';
+        for($i = 0;$i < $length;$i++) 
+        { 
+            $password .= $chars[rand(0,count($chars)-1)];
+        } 
+            return $password;
     }
 
 /**
