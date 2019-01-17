@@ -400,21 +400,22 @@ class Configtemplate extends Base
 				'key'=>'pay_wx_key',
 				'secert'=>'pay_wx_secert'
 			];
-		$zfb = [
-				'appid'=>'pay_zfb_appid',
-				'mchid'=>'pay_zfb_merchant_private_key',
-				'key'=>'pay_zfb_alipay_public_key'];
+		// $zfb = [
+		// 		'appid'=>'pay_zfb_appid',
+		// 		'mchid'=>'pay_zfb_merchant_private_key',
+		// 		'key'=>'pay_zfb_alipay_public_key'];
 		if ($list['type'] == 'static') {
 			$type = 'static';
 		}else{
-			$type = $list['id'] == 2 ? $wx[$list['type']]: $zfb[$list['type']]; // 1 在线支付 2 微信支付  3 支付宝支付 
+			$type = $list['id'] == 3 ? $wx[$list['type']]: $wx[$list['type']]; // 1 在线支付 2 微信支付  3 支付宝支付 
 		}
+		// dd(trim($list['text']));
 		if (!empty($list) || !empty($list['id'])) {
 			
 			$i = Db::table('shop_pay')
 					->where('id',$list['id'])
 					->update([
-						$type=>trim($list['text'])
+						$type => trim($list['text'])
 					]);
 			if ($i) {
 				if ($list['type'] == 'static') {

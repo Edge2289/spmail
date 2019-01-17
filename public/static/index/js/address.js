@@ -50,14 +50,14 @@ $('.item-content').each(function(){
 		 * @param  {[type]} wuliu [description]
 		 * @return {[type]}       [description]
 		 */
-		if (wuliu == '') {
-			alert($fujian['wuliu']);
-			return false;
-		}
-		if (pay == '') {
-			alert($fujian['pay']);
-			return false;
-		}
+		// if (wuliu == '') {
+		// 	alert($fujian['wuliu']);
+		// 	return false;
+		// }
+		// if (pay == '') {
+		// 	alert($fujian['pay']);
+		// 	return false;
+		// }
 		if (address == '') {
 			alert($fujian['address']);
 			return false;
@@ -66,8 +66,8 @@ $('.item-content').each(function(){
 		var data ={
 			'goodslist' : goodsList,
 			'liuyan' : $('input[name="liuyan"]').val(),
-			'wuliu' : wuliu,
-			'pay' : pay,
+			'wuliu' : 0,
+			'pay' : 0,
 			'address' : address,
 			'time' : new Date().getTime(),
 			'__token__' : '{:token()}',
@@ -78,8 +78,13 @@ $('.item-content').each(function(){
 			'url'  : "/index/order/sureOrder",
 			'data' : {data:window.btoa(JSON.stringify(data))},
 			'dataType' : 'json',
-			success:function(){
-
+			success:function(data){
+				var data = JSON.parse(data);
+				if (!data['status']) {
+					alert(data['msg']);
+				}else{
+					window.location.href = "/index/order/orderPay?order="+window.btoa(JSON.stringify(data['data']));
+				}
 			},
 			error:function(){
 				console.log('网络错误');

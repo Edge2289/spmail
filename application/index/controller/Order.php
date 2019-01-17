@@ -6,6 +6,7 @@ use think\Loader;
 use think\Session;
 use think\Cookie;
 use think\Cache;
+use think\Request;
 use app\index\model\Goods;
 use app\index\common\Base;
 
@@ -126,22 +127,43 @@ class Order extends Base
 			}
 		}
 		return json_encode([
-			'status' => 0,
-			'msg'	 => $e->getMessage(),
+			'status' => 1,
+			'msg'	 => "success",
 			'data'   => [
 						'order_id' => $orderSql['order_ddh'],
 						'order_price' => $orderSql['order_price'],
-						'address' => Db::table('shop_user_address')
-											->where('address_id',$orderSql['order_address'])
-											->where('user_id',Session::get('user_id'))
-											->find(),
+						'order_pay' => $orderSql['order_pay'],
+						'order_time' => date("Y-m-d H:i:s",($orderSql['order_time']+7200)),
+						'address' => $orderSql['order_address'],
 					],
 			]);
 
 	}
 
-	public function orderPay(){
-
+	public function orderPay(Request $request){
+		$order = json_decode(base64_decode(input('get.order')),true);
+        $pay = Db::table('shop_pay')->where('static',0)->field('id,pay_name,pay_img')->select();
+		$order['address'] = Db::table('shop_user_address')
+				                        ->alias('a')
+				                        ->join('shop_area b','a.country = b.Id')
+				                        ->join('shop_area c','a.province = c.Id')
+				                        ->join('shop_area d','a.city = d.Id')
+				                        ->join('shop_area e','a.district = e.Id')
+				                        ->where('a.user_id',Session::get('user_id'))
+				                        ->where('address_id',$order['address'])
+				                        ->field('a.address_id,a.consignee as name,a.address,a.mobile,a.is_default,b.Name as country,c.Name as province,d.Name as city,e.Name as district')
+				                        ->find();
+		// 
+		$this->assign([
+				'data' => $order,
+				'pay' => $pay,
+				'order' => input('get.order')
+			]);
+		// dd($order);
 		return $this->fetch();
+	}
+
+	public function _empty(){
+		dd('_empty');
 	}
 }

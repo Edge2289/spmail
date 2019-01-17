@@ -4,9 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>订单提交成功</title>
-<link rel="stylesheet"  type="text/css" href="__STATIC_index__/AmazeUI-2.4.2/assets/css/amazeui.css"/>
-<link href="__STATIC_index__/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet"  type="text/css" href="__STATIC_index__/AmazeUI-2.4.2/assets/css/amazeui.css"/> -->
+<!-- <link href="__STATIC_index__/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css"> -->
 <link href="__STATIC_index__/basic/css/demo.css" rel="stylesheet" type="text/css" />
+		<link href="__STATIC_index__/css/jsstyle.css" rel="stylesheet" type="text/css" />
 
 <link href="__STATIC_index__/css/sustyle.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="__STATIC_index__/basic/js/jquery-1.7.min.js"></script>
@@ -70,6 +71,9 @@
 		height: 50px;
 		margin: 0 auto;
 	}
+	.logistics pay-list pay{
+
+	}
 </style>
 </head>
 
@@ -83,43 +87,56 @@
  <div class="status">
    <h2>
    	<!-- <img src="../images/T13iv.XiFdXXa94Hfd-32-32.png" alt="" style="margin-right: 10px;" /> -->
-   订单提交成功，请尽快付款！订单号：2019011213122611</h2>
-   <div class="successInfo">
+   订单提交成功，请尽快付款！订单号：{$data['order_id']}</h2>
+   <div class="successInfo" style="width: 600px">
      <ul>
-       <li>付款金额<em style="font-size: 30px;">¥9.90</em></li>
+       <li>付款金额<em style="font-size: 30px;">¥{$data['order_price']}</em></li>
 	   </br>
-	   <li style="font-size: 18px;">请在<span style="color: #e53d1c;">60分钟</span>内完成支付</li>
+	   <li style="font-size: 18px;">请在
+	   		<span style="color: #e53d1c;" id="timeAdd">60分钟</span>
+	   	内完成支付</li>
        <div class="user-info">
-         <p>收货人：艾迪</p>
-         <p>联系电话：15871145629</p>
-         <p>收货地址：湖北省 武汉市 武昌区 东湖路75号众环大厦</p>
+         <p>收货人：{$data["address"]["name"]}</p>
+         <p>联系电话：{$data["address"]["mobile"]}</p>
+         <p>收货地址：{$data["address"]["country"]}{$data["address"]["province"]}{$data["address"]["city"]}{$data["address"]["district"]}{$data["address"]["address"]}</p>
        </div>
              <span style="color: #020202">请认真核对您的收货信息，如有错误请联系客服</span>                     
      </ul>
+     <div class="logistics">
+						<h3>选择支付方式</h3>
+						<ul class="pay-list">
+							{volist name="pay" id="paylist"}
+								<li class="pay card" style="width: 48%;height: 50px;" data-value="{$paylist['id']}">
+									<img src="{$paylist['pay_img']}" style="width: 36px;height: 36px" />
+									{$paylist['pay_name']}<span></span>
+								</li>
+							{/volist}
+						</ul>
+					</div>
+					<div class="clear"></div>
 	 <!--  用户余额支付  -->
-	 <div style="border: 1px solid #e0e0e0;padding: 10px;margin-top: 30px;">
+	 <div id="yezf" style="display: none;border: 1px solid #e0e0e0;padding: 10px;margin-top: 30px;">
 	 	<div>支付方式：<span style="color: #e53d1c;">在线支付</span></div>
 	 	<br />
-		请输入密码：<input type="text" name="pay" />
+		请输入密码：<input type="password" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入六位数的支付密码" maxlength="6" name="payPassword" />
+		<input type="hidden" name="__token__" value='{:Token()}' />
 		<input type="submit" name="submit" value="提交" />
 	 </div>
 	 <!--  用户余额支付  -->
 	 <!--  第三方支付 -->
-	 <div class="er-box" style="display: none;background-color:#1296db;">
+	 <div class="er-box" style="display: none;background-color:#1296db;margin-top: 30px;">
 		<div class="tx"> 
 			
 				支付宝扫码
 			
 		</div>
 		<div class="er">
-			<img src="/pay_get_qr_code?order_sn=2019011213122611&amp;paytype=A01&amp;r=0.8492524925910356" id="qr-code">
+			<!-- <img src="/pay_get_qr_code?order_sn=2019011213122611&amp;paytype=A01&amp;r=0.8492524925910356" id="qr-code"> -->
 		</div>
 		<div class="pic">
 			<div>
 				<img src="http://www.365goodlife.com/static/home/img/pay_wx_ali_1.png">
-				
-					打开支付宝
-				
+					<span class="txhtml">打开支付宝</span>
 			</div>
 			<div>
 				<img src="http://www.365goodlife.com/static/home/img/pay_wx_ali_2.png">
@@ -134,18 +151,146 @@
 	 <!-- **************************** -->
 		 <div class="option">
 		   <span class="info">您可以</span>
-			<a href="../person/order.html" class="J_MakePoint">查看<span>已买到的宝贝</span></a>
-			<a href="../person/orderinfo.html" class="J_MakePoint">查看<span>交易详情</span></a>
+			<a href="javascript:void(0)" class="J_MakePoint">查看<span>已买到的宝贝</span></a>
+			<a href="javascript:void(0)" class="J_MakePoint">查看<span>交易详情</span></a>
 		 </div>
 		</div>
 	  </div>
 </div>
 
+<style type="text/css">
+#loading{z-index:1;padding:5px 0 5px 29px;display: none;    z-index: 999;    position: absolute;
+background:url(http://build.gzwhir.com/Whir_WEB/jsdemo/loading_1/images/loading_red.gif) no-repeat 10px top;left:0;top:0;width:90px;
+position:fixed; height:50px}
+#beijing{
+	display: none;
+	position: fixed;
+	z-index: 998;
+	top: 0px;
+	background: rgba(0, 0, 0, 0.53);;
+	width: 100%;
+	height: 100%;
+}
+</style>
+<div id="loading"></div>
+<div id="beijing">asdasd</div>
 <!-- 
 	支付宝颜色：#1296db
 	微信颜色：#42b035
  -->
 
+<script>
+	$(document).ready(function(){
 
+
+		/*********   倒计时间   **********/
+		function TimeDown(id, endDateStr) {
+		    //结束时间
+		    var endDate = new Date(endDateStr);
+		    //当前时间
+		    var nowDate = new Date();
+		    //相差的总秒数
+		    var totalSeconds = parseInt((endDate - nowDate) / 1000);
+		    //天数
+		    var days = Math.floor(totalSeconds / (60 * 60 * 24));
+		    //取模（余数）
+		    var modulo = totalSeconds % (60 * 60 * 24);
+		    //小时数
+		    var hours = Math.floor(modulo / (60 * 60));
+		    modulo = modulo % (60 * 60);
+		    //分钟
+		    var minutes = Math.floor(modulo / 60);
+		    //秒
+		    var seconds = modulo % 60;
+		    //输出到页面
+		    document.getElementById(id).innerHTML = hours + "小时" + minutes + "分钟" + seconds + "秒";
+		    //延迟一秒执行自己
+		    setTimeout(function () {
+		        TimeDown(id, endDateStr);
+		    }, 1000)
+		}
+		var time = "{$data['order_time']}";
+		 TimeDown("timeAdd", time);
+		/*********   倒计时间   **********/
+		$(".logistics").each(function() {
+						var i = $(this);
+						var p = i.find("ul>li");
+						p.click(function() {
+							// 1 在线余额支付  3  微信支付   4   支付宝支付
+							var type = $(this).attr('data-value');
+							if (type == 1) {
+								$('#yezf').show();
+								$('.er-box').hide();
+							}else if(type == 3){
+								$('#yezf').hide();
+								$('.er-box').show();
+								$('.tx').html('微信扫码');
+								$('.txhtml').html('打开微信');
+								$('.er-box').css('background-color','#42b035');
+							}else if(type == 4){
+								$('#yezf').hide();
+								$('.er-box').show();
+								$('.tx').html('支付宝扫码');
+								$('.txhtml').html('打开支付宝');
+								$('.er-box').css('background-color','#1296db');
+							}
+							if (!!$(this).hasClass("selected")) {
+								$(this).removeClass("selected");
+							} else {
+								$(this).addClass("selected").siblings("li").removeClass("selected");
+							}
+						})
+					})
+		function sleep(numberMillis) {    
+			var now = new Date();    
+			var exitTime = now.getTime() + numberMillis;   
+			while (true) { 
+				now = new Date();       
+				if (now.getTime() > exitTime) 
+					return;    
+			} 
+		}
+		$('input[name="submit"]').click(function(){
+			var payPassword = $('input[name="payPassword"]').val();
+			if (payPassword == '') {
+				alert('请输入密码');
+				return false;
+			}else if (payPassword.length != 6){
+				alert('密码格式不对');
+				return false;
+			}
+			var data = [];
+			$.ajax({
+				 'type' : 'POST',
+				 'url'	: '{:Url("pay/xianpay")}',
+				 'data' : {'payPassword':payPassword,'order':"{$order}",'__token__':$('input[name="__token__"]').val()},
+				 'dataType' : 'json',
+				 'async' : false,
+				 'timeout' : '30000',
+				 beforeSend:function(){
+				 	var clientWidth = document.documentElement.clientWidth;
+				    var clientHeight = document.documentElement.clientHeight;
+				    var x = clientWidth / 2;
+				    var y = clientHeight  / 2;
+					$("#loading").css('top',y);
+					$("#loading").css('left',x);
+				 	$("#loading").show();
+				 	$("#beijing").show();
+				 	// sleep(600);
+				 },
+				 success:function(data){
+				 	if (data['code'] == 0) {
+				 		alert(data['message']);
+				 	}
+				 	$("#loading").hide();
+				 	$("#beijing").hide();
+				 },
+				 erroor:function(){
+				 	console.log("网络有错");
+				 }
+			})
+		})
+	})
+</script>
 </body>
 </html>

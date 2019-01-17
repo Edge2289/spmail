@@ -11,18 +11,23 @@ use think\Request;
 use app\common\redis\RedisClice;
 use app\index\common\Base;
 use app\index\model\Goods;
+use app\index\model\Shop_user;
 
 use app\common\api\wxpay\Wxpay;
 /**
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-15 11:34:36
+ * @Last Modified time: 2019-01-17 18:00:02
  */
 
 class Pay extends Base
 {
     public function _initialize(){
+
+        // if (empty(Session::get('user_id'))) {
+        //     dd('_empty');
+        // }
         parent::_initialize();
          $redis = $this->redisConfig();
          //去友情链接
@@ -223,17 +228,69 @@ class Pay extends Base
         return json_encode($ajax);
     }
 
+    public function xianpay(){
+        $pay = input('post.payPassword');
+        // print_r(!is_numeric($pay));
+        if (empty($pay) || $pay == '' || !is_numeric($pay) || strlen($pay) != 6) {
+            return ['code' => 0, 'message' => '参数错误'];
+        }
+        // 获取订单数据
+        $order = json_decode(base64_decode(input('post.order')),true);
+        // 查询数据
+        $orderStatus = Db::table('shop_order')
+                        ->where('order_ddh',$order['order_id'])
+                        ->field('order_status,order_time,order_sid,order_uid')
+                        ->find();
+        if (empty($orderStatus)) {
+            return ['code'=>0,'message'=>'订单有误！'];
+        }
+        /**
+         * [$use 第一，先判断此订单是否属于此人的
+         *        第二，判断此商品是否还在上架
+         *        第三，判断订单是否在规定时间付款
+         *        第四，判断此商品状态是否支付以及取消      
+         * ]
+         * @var [type]
+         */
+        // 第一
+        if ((int)$orderStatus['order_uid'] != (int)Session::get('user_id')) {
+            return ['code'=>0,'message'=>'参数有误'];
+        }
+        // 第二
+        $goodsStatus = Goods::where('goods_id',$orderStatus['order_sid'])
+                                ->where('is_on_sale',1)
+                                ->find();
+        if (empty($goodsStatus)) {
+            return ['code'=>0,'message'=>'该商品已下架'];
+        }
+        // 第三
+        if (time() > ($orderStatus['order_time']+3600*2)) {
+            Db::table('shop_order')->where('order_ddh',$order['order_id'])->update(['order_status'=>'5']);
+            return ['code'=>0,'message'=>'订单超时，请重新下单'];
+        }
+        // 第四
+        if ($orderStatus['order_status'] != 1) {
+            return ['code'=>0,'message'=>'订单已取消，请重新下单'];
+        }
 
-    public function wxpay(){
-        header("Content-type:text/html;charset=utf-8");
-        $tools = new Wxpay();
-        // vendor('phpqrcode/phpqrcode');
-        // $bb = new \QRcode();
-        // $url = urldecode($tools->native());
-        // dd($url);
-        // $url1 = "weixin://wxpay/bizpayurl?appid=wx2421b1c4370ec43b&mch_id=10000100&nonce_str=f6808210402125e30663234f94c87a8c&product_id=1&time_stamp=1415949957&sign=512F68131DD251DA4A45DA79CC7EFE9D";
-        // echo $bb::png($url);
-        // die;
-        dd($tools->wxpay('JSAPI支付测试','14156599902019','1415659990',100,3));
+
+        $user = Shop_user::get(Session::get('user_id'))
+                            ->alias('a')
+                            ->join('shop_salt b','a.user_id = b.user_id')
+                            ->where('a.user_is_lock',1)
+                            ->field('a.user_paypwd,b.salt_pay_pwd')
+                            ->find()
+                            ->toArray();
+        dd($user);
+        if (empty($user)) {
+            return ['code'=>2,'message'=>'用户不存在，请重新登陆'];
+        }
+        if (empty($user['user_paypwd'])) {
+            return ['code'=>3,'message'=>'请设置支付密码！'];
+        }
+
+        print_r($user);
+        // return false;
     }
+
 }
