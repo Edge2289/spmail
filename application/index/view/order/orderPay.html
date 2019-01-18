@@ -279,9 +279,35 @@ position:fixed; height:50px}
 				 	// sleep(600);
 				 },
 				 success:function(data){
+				 	switch(data['code']){
+				 		case 0: 
+				 				// othen 
+				 			break;
+
+				 		case 1: 
+				 				// 支付成功
+				 			break;
+
+				 		case 2: 
+				 				// 用户不存在，请重新登陆
+				 			break;
+
+				 		case 3: 
+				 				// 请设置支付密码
+				 			break;
+
+				 		case 5: 
+				 				// 密码输入错误，请重新输入
+				 			break;
+
+				 		case 6: 
+				 				// 账号输入密码错误达到三次，账号被封！
+				 			break;
+				 	}
 				 	if (data['code'] == 0) {
 				 		alert(data['message']);
 				 	}
+				 	alert(data['message']);
 				 	$("#loading").hide();
 				 	$("#beijing").hide();
 				 },

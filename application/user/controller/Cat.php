@@ -12,7 +12,7 @@ use app\user\common\Base;
  * @Author: 小小
  * @Date:   2018-12-19 11:28:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-12 09:45:54
+ * @Last Modified time: 2019-01-18 17:47:05
  */
 
 class Cat extends Base
@@ -44,10 +44,13 @@ class Cat extends Base
            $i[$key] = $value['ac_title'];
         }
         $link_one = explode("_m_", implode(array_unique($i), "_m_"));
+        	$userData = User::get(Session::get('user_id'))
+    					->toArray();
         $this->assign([
             'linka' => $linka,
             'link_one' => $link_one,
             'link' => $link,
+            'userData' => $userData,
             'dataCat' => json_decode(cookie::get('dataCat'),true),
         ]);
 	}

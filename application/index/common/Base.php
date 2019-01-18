@@ -6,6 +6,7 @@ use think\Controller;
 use PHPMailer\PHPMailer;
 use app\common\redis\RedisClice;
 use think\Db;
+use think\Session;
 
 /**
 * 
@@ -123,5 +124,38 @@ class Base extends Controller
             'link_one' => $link_one,
             'link' => $link,
         ]);
+    }
+
+    /**
+     * [webpay description]
+     * @param  [type] $paypwd  [后台密码]
+     * @param  [type] $qianpwd [前台输入的密码]
+     * @param  [type] $salt_pw [密钥]
+     * @return [type]          [description]
+     */
+    public function webpay($paypwd, $qianpwd, $salt_pw){
+        $qianpaypwd = MD5(MD5($qianpwd).$salt_pw);
+        if ($paypwd == $qianpaypwd) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * [userLog 用户操作错误日志]
+     * @param  string $error      [错误信息]
+     * @param  [type] $request    [请求]
+     * @param  string $controller [控制器]
+     * @return [type]             [description]
+     */
+    public function userLog($error = '错误操作', $request, $controller = 'index'){
+        Db::table('shop_user_log')
+            ->insert([
+                'user_id' => Session::get('user_id'),
+                'user_log_time' => time(),
+                'user_log_ip' => $request->ip(),
+                'user_log_list_address' => $request->url(true),
+                'user_log_text' => $error,
+            ]);
     }
 }

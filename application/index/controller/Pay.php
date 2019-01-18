@@ -18,7 +18,7 @@ use app\common\api\wxpay\Wxpay;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-17 18:00:02
+ * @Last Modified time: 2019-01-18 13:23:32
  */
 
 class Pay extends Base
@@ -228,9 +228,13 @@ class Pay extends Base
         return json_encode($ajax);
     }
 
-    public function xianpay(){
+    /**
+     * [xianpay 订单在线支付]
+     * @return [type] [description]
+     * 
+     */
+    public function xianpay(Request $request){
         $pay = input('post.payPassword');
-        // print_r(!is_numeric($pay));
         if (empty($pay) || $pay == '' || !is_numeric($pay) || strlen($pay) != 6) {
             return ['code' => 0, 'message' => '参数错误'];
         }
@@ -270,27 +274,69 @@ class Pay extends Base
         }
         // 第四
         if ($orderStatus['order_status'] != 1) {
-            return ['code'=>0,'message'=>'订单已取消，请重新下单'];
+            return ['code'=>0,'message'=>'订单已结束，请重新下单'];
         }
 
-
-        $user = Shop_user::get(Session::get('user_id'))
-                            ->alias('a')
-                            ->join('shop_salt b','a.user_id = b.user_id')
-                            ->where('a.user_is_lock',1)
-                            ->field('a.user_paypwd,b.salt_pay_pwd')
-                            ->find()
-                            ->toArray();
-        dd($user);
+        $user = Db::table('shop_user')
+                        ->alias('a')
+                        ->join('shop_salt b','a.user_id = b.user_id')
+                        ->where('a.user_id',Session::get('user_id'))
+                        ->where('a.user_is_lock',1)
+                        ->field('a.user_paypwd,a.user_money,b.salt_pay_pwd')
+                        ->find();
         if (empty($user)) {
             return ['code'=>2,'message'=>'用户不存在，请重新登陆'];
         }
         if (empty($user['user_paypwd'])) {
             return ['code'=>3,'message'=>'请设置支付密码！'];
         }
+        // 判断支付密码是否正确
+        //  不正确添加记录  达到三次账号锁定
+        if (!$this->webpay($user['user_paypwd'], $pay ,$user['salt_pay_pwd'])) {
+            $userModel = Shop_user::get(Session::get('user_id'));
+            Shop_user::where('user_id',Session::get('user_id'))
+                                ->setInc('user_error_paypwd',1);
+            if ($userModel['user_error_paypwd'] >= 3) {
+                $userModel->user_is_lock = 0;
+                $userModel->save();
+                $this->userLog('用户：'.Session::get('user_id').'输入密码错误达到三次，账号被封！',$request,'index/pay/xianpay');
+                return ['code'=>6,'message'=>'账号输入密码错误达到三次，账号被封！'];
+            }
+            $this->userLog('用户：'.Session::get('user_id').'支付输入密码错误',$request,'index/pay/xianpay');
+            return ['code'=>5,'message'=>'密码输入错误，请重新输入！','data'=>$userModel['user_error_paypwd']];
+        }
+        /*   判断用户余额是否够支付 */
+        if (((float)$user['user_money']-(float)abs($order['order_price'])) >= 0) {
+            Db::startTrans();
+            try{
+                $userModel = Shop_user::get(Session::get('user_id'));
+                $userModel->user_money = ((float)$user['user_money']-(float)abs($order['order_price']));
+                $userModel->save();
+                $this->userLog('用户：'.Session::get('user_id').'下单成功',$request,'');
+                $i = Db::table('shop_order')
+                        ->where('order_ddh',$order['order_id'])
+                        ->update(['order_status' => 2]);
+                // 写入资金日志
+                $insert = [
+                        'user_id' => Session::get('user_id'), 
+                        'user_money' => '-'.$order['order_price'], 
+                        'change_time' => time(), 
+                        'desc' => "商城下单支付使用", 
+                        'order_sn' => $order['order_id'], 
+                    ];
+                $b = Db('shop_account_log')->insertGetId($insert);
+                if (!$i || !$b) {
+                    throw new Exception("操作错误");
+                }
+                Db::commit();
+                return ['code'=>1,'message'=>'支付成功'];
 
-        print_r($user);
-        // return false;
+            } catch(\Excption $e){
+                Db::rollback();
+            return ['code'=>0,'message'=>$e->getMessage()];
+            }
+        }else{
+            return ['code'=>0,'message'=>'账号余额不足'];
+        }
     }
-
 }
