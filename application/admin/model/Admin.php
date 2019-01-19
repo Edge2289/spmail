@@ -1,11 +1,4 @@
 <?php
-
-/**
- * @Author: 小小
- * @Date:   2018-12-17 13:34:35
- * @Last Modified by:   小小
- * @Last Modified time: 2018-12-18 13:27:33
- */
 namespace app\admin\model;
 
 use think\Model;

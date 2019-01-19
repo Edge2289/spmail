@@ -18,7 +18,7 @@ use app\common\api\wxpay\Wxpay;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-18 13:23:32
+ * @Last Modified time: 2019-01-19 14:57:38
  */
 
 class Pay extends Base
@@ -315,7 +315,7 @@ class Pay extends Base
                 $this->userLog('用户：'.Session::get('user_id').'下单成功',$request,'');
                 $i = Db::table('shop_order')
                         ->where('order_ddh',$order['order_id'])
-                        ->update(['order_status' => 2]);
+                        ->update(['order_status' => 2,'order_pay'=>1]);
                 // 写入资金日志
                 $insert = [
                         'user_id' => Session::get('user_id'), 

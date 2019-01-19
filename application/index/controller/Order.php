@@ -94,7 +94,7 @@ class Order extends Base
 					'order_address' => $orderLisr["address"], // 收货人
 					'order_time' => time(), // 下单时间
 					'order_status' => 1, // 状态
-					'order_pay' => $orderLisr["pay"], // 支付方式
+					'order_pay' => 0, // 支付方式
 					'order_liuyan' => $orderLisr["liuyan"], // 留言
 					'order_item' => $ov['data']['item_id'], //
 					'order_itemname' => $ov['data']['item_name'], //
@@ -142,6 +142,9 @@ class Order extends Base
 
 	public function orderPay(Request $request){
 		$order = json_decode(base64_decode(input('get.order')),true);
+		if (empty($order)) {
+			dd("_empty");
+		}
         $pay = Db::table('shop_pay')->where('static',0)->field('id,pay_name,pay_img')->select();
 		$order['address'] = Db::table('shop_user_address')
 				                        ->alias('a')

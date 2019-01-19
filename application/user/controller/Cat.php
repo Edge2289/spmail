@@ -7,12 +7,13 @@ use think\Db;
 use think\Request;
 use think\Cookie;
 use app\user\common\Base;
+use app\user\model\User;
 
 /**
  * @Author: 小小
  * @Date:   2018-12-19 11:28:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-18 17:47:05
+ * @Last Modified time: 2019-01-19 13:48:12
  */
 
 class Cat extends Base
@@ -57,7 +58,6 @@ class Cat extends Base
 
 
 	public function index(){
-		// dd(json_decode(cookie::get('dataCat'),true));
 		 $this->assign([
             'dataCat' => json_decode(cookie::get('dataCat'),true),
         ]);

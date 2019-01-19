@@ -1,11 +1,12 @@
 {include file="public/header"}
+<link href="__STATIC_admin__/public/order.css" rel="stylesheet" type="text/css" />
   <body>
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">演示</a>
+        <a href="">订单管理</a>
         <a>
-          <cite>导航元素</cite></a>
+          <cite>订单列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
@@ -16,100 +17,204 @@
           <input class="layui-input" placeholder="开始日" name="start" id="start">
           <input class="layui-input" placeholder="截止日" name="end" id="end">
           <div class="layui-input-inline">
-            <select name="contrller">
-              <option>支付状态</option>
-              <option>已支付</option>
-              <option>未支付</option>
+            <select name="paytype">
+              <option value="0">支付状态</option>
+              <option value="1">已支付</option>
+              <option value="2">未支付</option>
             </select>
           </div>
           <div class="layui-input-inline">
-            <select name="contrller">
-              <option>支付方式</option>
-              <option>支付宝</option>
-              <option>微信</option>
-              <option>货到付款</option>
+            <select name="paytype">
+              <option value="0">支付方式</option>
+              <option value="1">在线支付</option>
+              <option value="2">货到付款</option>
+              <option value="3">微信付款</option>
+              <option value="4">支付宝付款</option>
             </select>
           </div>
           <div class="layui-input-inline">
-            <select name="contrller">
-              <option value="">订单状态</option>
-              <option value="0">待确认</option>
-              <option value="1">已确认</option>
-              <option value="2">已收货</option>
-              <option value="3">已取消</option>
+            <select name="ordertype">
+              <option value="0">订单状态</option>
+              <option value="1">未付款</option>
+              <option value="2">待发货</option>
+              <option value="3">待确认收货</option>
               <option value="4">已完成</option>
-              <option value="5">已作废</option>
+              <option value="5">已取消</option>
             </select>
           </div>
-          <input type="text" name="username"  placeholder="请输入订单号" autocomplete="off" class="layui-input">
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+          <input type="text" name="orderddh"  placeholder="请输入订单号" autocomplete="off" class="layui-input">
+          <button class="layui-btn" lay-submit lay-filter="formDemo"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
-        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./order-add.html')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <span class="layui-btn layui-bg-cyan" data-type="reload">共有数据：{$orderList|count} 条记录</span>
       </xblock>
-      <table class="layui-table">
-        <thead>
+    <table class="table table-bordered bg-white">
+         <tbody>
           <tr>
-            <th>
-              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-            </th>
-            <th>订单编号</th>
-            <th>收货人</th>
-            <th>总金额</th>
-            <th>应付金额</th>
-            <th>订单状态</th>
-            <th>支付状态</th>
-            <th>发货状态</th>
-            <th>支付方式</th>
-            <th>配送方式</th>
-            <th>下单时间</th>
-            <th >操作</th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>2017009171822298053</td>
-            <td>老王:18925139194</td>
-            <td>7829.10</td>
-            <td>7854.10</td>
-            <td>待确认</td>
-            <td>未支付</td>
-            <td>未发货</td>
-            <td>其他方式</td>
-            <td>申通物流</td>
-            <td>2017-08-17 18:22</td>
-            <td class="td-manage">
-              <a title="查看"  onclick="x_admin_show('编辑','order-view.html')" href="javascript:;">
-                <i class="layui-icon">&#xe63c;</i>
-              </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>
-              </a>
-            </td>
+                <th class="order-tab-1" style="width: 50%">商品信息</th>
+                <th class="order-tab-2" style="width: 13%">金额</th>
+                <th class="order-tab-3" style="width: 13%">实际付款</th>
+                <th class="order-tab-4" style="width: 13%">订单状态</th>
+                <th class="order-tab-5" style="width: 11%">操作</th>
           </tr>
         </tbody>
-      </table>
-      <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
-        </div>
-      </div>
+    </table>
+          {volist name="orderList" id="ol"}
+              <table class="table table-striped table-bordered text-nowrap">
+                            <tbody><tr>
+                                <td colspan="5">
+                                    <span class="col-md-2">
+                                        <span class="titleColor">下单时间：</span>
+                                        {$ol['order_time']|date="Y-m-d h:i:s",###}</span>
+                                    <span class="col-md-3">
+                                        <?php if($ol['order_status'] ==  '未付款'){ ?>
+                                            <span class="label label-default">未付款</span>
+                                            <?php }else if($ol['order_status'] == '待发货'){ ?>
+                                            <span class="label label-success">待发货</span>
+                                            <?php }else if($ol['order_status'] == '待确认收货'){ ?>
+                                            <span class="label label-warning">待确认收货</span>
+                                            <?php }else if($ol['order_status'] ==  '已完成'){ ?>
+                                            <span class="label label-success">已完成</span>
+                                            <?php }else{ ?>
+                                            <span class="label label-danger">已取消</span>
+                                            <?php } ?>
+                                          <span class="titleColor">订单号：{$ol['order_ddh']}</span>
+                                    </span>
+                                    <span class="mr-5">
+                                        <span class="titleColor">用户编号：{$ol["user_list"]["user_id"]}</span>
+                                    </span>
+                                    <span class="mr-5">
+                                        <span class="titleColor">手机号：{$ol["address_list"]["mobile"]}</span>
+                                    </span>
+                                    <span class="mr-5">
+                                        <span class="titleColor">昵称：{$ol["user_list"]["user_nick"]}</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="order-tab-1" style="width: 50%">
+                                                                    <div class="goods-item" flex="dir:left box:first">
+                                        <div class="form-inline">
+                                            <div class="form-group goods-pic" style="width:65px;height: 65px;">
+                                              <img src="<?php $url = 'http://'.$_SERVER['SERVER_NAME'].$ol['goods_list']['original_img']; echo str_replace('\\', '/', $url);?>" width="65px" height="65px" alt="">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="goods-name">{$ol["goods_list"]["goods_name"]}</div>
+                                                <div class="mt-1">
+                                                    <span class="fs-sm">
+                                                        规格：
+                                                        <span class="text-danger"> 
+                                                          <span class="mr-3">{$ol["order_itemname"]}</span>
+                                                         </span>
+                                                    </span>
+                                                    <span class="fs-sm">数量：
+                                                        <span class="text-danger">{$ol["order_num"]} </span>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span class="fs-sm">单价：
+                                                        <span class="text-danger">{$ol["order_price"]/$ol["order_num"]}元</span>
+                                                    </span>
+                                                    <span class="fs-sm">小计：
+                                                        <span class="text-danger mr-4">{$ol["order_price"]}元</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                                </td>
+                                <td class="order-tab-2" style="width: 13%">
+                                    <div class="titleColor">总金额：
+                                        <span style="color:blue;">{$ol["order_price"]}</span>元
+                                    </div>
+                                </td>
+                                <td class="order-tab-3" style="width: 13%">
+                                    <div><span style="color:blue;">{$ol["order_price"]}</span>元</div>
+                                </td>
+                                <td class="order-tab-4" style="width: 13%">
+                                  <div>
+                                        支付方式：
+                                        <?php if($ol['order_pay'] ==  '微信付款'){ ?>
+                                            <span class="label label-success">{$ol["order_pay"]}</span>
+                                            <?php }else if($ol['order_pay'] == '支付宝付款'){ ?>
+                                            <span class="label label-primary">{$ol["order_pay"]}</span>
+                                            <?php }else{ ?>
+                                            <span class="label label-danger">{$ol["order_pay"]}</span>
+                                        <?php } ?>
+                                    </div>
+                                </td>
+                                <td class="order-tab-5" style="width: 11%">
+
+                                    <div>
+                                        <a class="btn btn-primary btn-sm">详情</a>
+                                    </div>
+                                  <?php if($ol['order_status'] ==  '未付款'){ ?>
+                                            <div style="margin-top: 0.5rem;">
+                                              <a class="btn btn-danger btn-sm" >取消订单</a>
+                                            </div>
+                                        <?php }else if($ol['order_status'] == '待发货'){ ?>
+                                            <div style="margin-top: 0.5rem;">
+                                              <a class="btn btn-success btn-sm" href="">发货</a>
+                                            </div>
+                                        <?php }else if($ol['order_status'] == '待确认收货'){ ?>
+                                            <div style="margin-top: 0.5rem;">
+                                              <a class="btn btn-info btn-sm" href="" style="background-color: #033c73; border: #033c73; ">物流</a>
+                                            </div>
+                                        <?php }else if($ol['order_status'] == '已完成'){ ?>
+                                            <div style="margin-top: 0.5rem;">
+                                              <a class="btn btn-info btn-sm" href="">确认收货</a>
+                                            </div>
+                                  <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <div>
+                                        <span class="mr-2"><span class="titleColor">收货人：{$ol["address_list"]["consignee"]}</span></span>
+                                        <span class="mr-2"><span class="titleColor">电话：{$ol["address_list"]["mobile"]}</span></span>
+                                        <span class="mr-3"><span class="titleColor">地址：
+                                        {$ol["address_list"]["country"]}
+                                        {$ol["address_list"]["province"]}
+                                        {$ol["address_list"]["city"]}
+                                        {$ol["address_list"]["district"]}
+                                        {$ol["address_list"]["address"]}
+                                      </span></span>
+                                        <!--<a class="btn btn-sm btn-primary edit-address"
+                                           data-index="#"
+                                           data-order-type="store" href="javascript:">修改地址</a>-->
+                                         <span class=" badge badge-default" style="background-color: #2fa4e7;">申通</span>
+                                        <span class="mr-3">
+                                            <span class="titleColor">快递单号：</span>
+                                                <a href="javascript:void(0)" data-toggle="modal" onclick="express(this)" data-type="" data-value="123456" data-target="#expressModal">123456</a>
+                                        </span>
+                                        </div>
+                                    <div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                      </table>
+
+                      {/volist}
+
+
+              <div class="page">
+                <div>
+                  <a class="prev" href="">&lt;&lt;</a>
+                  <a class="num" href="">1</a>
+                  <span class="current">2</span>
+                  <a class="num" href="">3</a>
+                  <a class="num" href="">489</a>
+                  <a class="next" href="">&gt;&gt;</a>
+                </div>
+              </div>
 
     </div>
     <script>
-      layui.use('laydate', function(){
+      layui.use(['laydate','form'], function(){
         var laydate = layui.laydate;
+        var form = layui.form;
         
         //执行一个laydate实例
         laydate.render({
@@ -123,57 +228,35 @@
       });
 
        /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
+      // function member_stop(obj,id){
+      //     layer.confirm('确认要停用吗？',function(index){
 
-              if($(obj).attr('title')=='启用'){
+      //         if($(obj).attr('title')=='启用'){
 
-                //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
+      //           //发异步把用户状态进行更改
+      //           $(obj).attr('title','停用')
+      //           $(obj).find('i').html('&#xe62f;');
 
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
+      //           $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+      //           layer.msg('已停用!',{icon: 5,time:1000});
 
-              }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
+      //         }else{
+      //           $(obj).attr('title','启用')
+      //           $(obj).find('i').html('&#xe601;');
 
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
-              }
+      //           $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+      //           layer.msg('已启用!',{icon: 5,time:1000});
+      //         }
               
-          });
-      }
-
-      /*用户-删除*/
-      function member_del(obj,id){
-          layer.confirm('确认要删除吗？',function(index){
-              //发异步删除数据
-              $(obj).parents("tr").remove();
-              layer.msg('已删除!',{icon:1,time:1000});
-          });
-      }
+      //     });
+      // }
 
 
-
-      function delAll (argument) {
-
-        var data = tableCheck.getData();
-  
-        layer.confirm('确认要删除吗？'+data,function(index){
-            //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
-        });
-      }
     </script>
-    <script>var _hmt = _hmt || []; (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-      })();</script>
+<style>
+ 
+
+</style>
   </body>
 
 </html>
