@@ -16,13 +16,7 @@
                 'name' =>'订单管理',
                 'action'=>array(
                      'index'=>'订单列表',
-                     'edit_order'=>'编辑订单',
-                     'delivery_list'=>'发货单列表',
-                     'delivery_info'=>'订单发货',
-                     'add_order'=>'添加订单',
-                     'split_order'=>'拆分订单',
-                     'detail'=>'订单详情',
-                     'return_list'=>'退货申请列表',
+                     'edit_order'=>'批评管理',
          	      )
                ),        
               'admin/user'=>array(

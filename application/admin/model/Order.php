@@ -2,16 +2,15 @@
 namespace app\admin\model;
 
 use think\Model;
+use think\Db;
+
 use app\admin\model\User;
-use app\admin\model\Goods;
-use app\admin\model\Address;
-use app\admin\model\Area;
 
 /**
  * @Author: 小小
  * @Date:   2019-01-19 14:01:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-19 17:50:51
+ * @Last Modified time: 2019-01-21 17:54:22
  */
 class Order extends Model
 {
@@ -20,14 +19,14 @@ class Order extends Model
 	public function getOrderStatusAttr($value)
 	{
 		// 1=未付款,2=待发货,3=待确认收货,4=已完成,5=已取消
-		$status = [1=>"未付款",2=>"待发货",13=>"待确认收货",4=>"已完成",5=>"已取消"];
+		$status = [1=>"未付款",2=>"待发货",3=>"待确认收货",4=>"已完成",5=>"已取消"];
 		return $status[$value];
 	} 
 
 	public function getOrderPayAttr($value)
 	{
 		// 1=未付款,2=待发货,3=待确认收货,4=已完成,5=已取消
-		$pay = [0=>"在线付款",1=>"在线付款",2=>"货到付款",3=>"微信付款",4=>"支付宝付款"];
+		$pay = [0=>"未支付",1=>"在线付款",2=>"货到付款",3=>"微信付款",4=>"支付宝付款"];
 		return $pay[$value];
 	} 
 
@@ -45,7 +44,14 @@ class Order extends Model
 							->field('goods_id,goods_name,original_img');
 	}
 
+	public function KuaidiList(){
+		return $this->hasOne("Kuaidi",'id','order_fahuo_wuliu')
+							->field('id,name');
+	}
+
+
 	/**
+	 *  订单列表
 	 * @param  [type] $page      [页码]
 	 * @param  [type] $pageSum   [页数]
 	 * @param  [type] $paytype   [支付方式]
@@ -55,55 +61,156 @@ class Order extends Model
 	 * @param  [type] $outtime   [结束时间]
 	 * @return [type]            [description]
 	 */
-	public function orderList($page, $pageSum, $paytype = 0, $ordertype = 0, $orderddh = 0, $starttime = 0, $outtime = 0)
+	public function orderList($data)
 	{
 		$where = [];
-		if (!empty($paytype)) {
-			$where['order_pay'] = $paytype;
+		if (!empty($data['paytype'])) {
+			$where['order_pay'] = $data['paytype'];
 		}
-		if (!empty($ordertype)) {
-			$where['order_status'] = $ordertype;
+		if (!empty($data['paytype'])) {
+			$where['order_pay'] = $data['paytype'];
 		}
-		if (!empty($orderddh)) {
-			$where['order_ddh'] = $orderddh;
+		if (!empty($data['ordertype'])) {
+			$where['order_status'] = $data['ordertype'];
 		}
-		print_r($paytype);
-		if (empty($starttime) && empty($outtime)){
-			return self::with('UserList')
-							->with('AddressList')
-							->with('GoodsList')
-							->page($page,$pageSum)
+		if (!empty($data['orderddh'])) {
+			$where['order_ddh'] = $data['orderddh'];
+		}
+		if ($data['paystatus'] == 2) {
+			$where['order_status'] = 1;
+		}
+		if ($data['paystatus'] == 1) {
+				unset($where['order_status']);
+				return self::with('UserList')
+								->with(['AddressList','GoodsList','KuaidiList'])
+								->page($data['page'],$data['pageSum'])
+								->where($where)
+								->where('order_status','<>',1)
+								->select();
+			}
+		return self::with('UserList')
+							->with(['AddressList','GoodsList','KuaidiList'])
+							->page($data['page'],$data['pageSum'])
 							->where($where)
+							->where('order_time','>',strtotime($data['starttime']))
+							->where('order_time','<',strtotime($data['outtime']))
 							->select();
+	}
+
+	/**
+	 * [orderCount 订单总数]
+	 * @param  [type] $data [description]
+	 * @return [type]       [description]
+	 */
+	public function orderCount($data)
+	{
+		$where = [];
+		if (!empty($data['paytype'])) {
+			$where['order_pay'] = $data['paytype'];
 		}
-		// strtotime
-		if (!empty($starttime) && !empty($outtime)) {
-			return self::with('UserList')
-							->with('AddressList')
-							->with('GoodsList')
-							->page($page,$pageSum)
+		if (!empty($data['paytype'])) {
+			$where['order_pay'] = $data['paytype'];
+		}
+		if (!empty($data['ordertype'])) {
+			$where['order_status'] = $data['ordertype'];
+		}
+		if (!empty($data['orderddh'])) {
+			$where['order_ddh'] = $data['orderddh'];
+		}
+		if ($data['paystatus'] == 2) {
+			$where['order_status'] = 1;
+		}
+		if ($data['paystatus'] == 1) {
+				unset($where['order_status']);
+				return self::with('UserList')
+								->with(['AddressList','GoodsList','KuaidiList'])
+								->page($data['page'],$data['pageSum'])
+								->where($where)
+								->where('order_status','<>',1)
+								->field('count(*) as count')
+								->select()
+								->toArray();
+			}
+		return self::with('UserList')
+							->with(['AddressList','GoodsList','KuaidiList'])
+							->page($data['page'],$data['pageSum'])
 							->where($where)
-							->where('order_time','<',strtotime($starttime))
-							->where('order_time','>',strtotime($outtime))
-							->select();
+							->where('order_time','>',strtotime($data['starttime']))
+							->where('order_time','<',strtotime($data['outtime']))
+							->field('count(*) as count')
+							->select()
+							->toArray();
+	}
+
+	/**
+	 * [orderCancel 取消订单]
+	 * @return [type] [description]
+	 */
+	public static function orderCancel($gid){
+		$order = self::get($gid);
+		$orderlist = $order->toArray();
+		$data =  [];
+		if ($orderlist['order_status'] == 1 || $orderlist['order_status'] == 0) { 
+			/**
+			 *  1 当用户没有付款的时候
+			 */
+			$order->order_status = 5;
+			$order->save();
+			$data = [
+					'core' => 1,
+					'msg'  => '取消订单成功',
+				];
+		}else{
+			/**
+			 *  2 用户付款了，返现
+			 *
+			 *  在线支付
+			 *  微信支付
+			 *  支付宝支付
+			 */
+			Db::startTrans();
+
+			// 在线支付
+			if ($order->order_pay == 1) {
+				try{
+					$order->order_status = 5;
+					$order->save();
+					$user = User::get($order['order_uid']);
+					$user->user_money = ($user->user_money+$order->order_price);
+					$user->save();
+
+					$data = [
+							'core' => 1,
+							'msg'  => '取消订单成功',
+						];
+					Db::commit();
+				}catch (\Excption $e){
+
+					Db::rollback();
+					$data = [
+					'core' => 0,
+					'msg'  => '取消订单失败',
+				];
+				}
+			}else{
+				$data = [
+					'core' => 0,
+					'msg'  => '暂不支持其他支付取消订单',
+				];
+			}
 		}
-		if (!empty($starttime)) {
-			return self::with('UserList')
-							->with('AddressList')
-							->with('GoodsList')
-							->page($page,$pageSum)
-							->where($where)
-							->where('order_time','<',strtotime($starttime))
-							->select();
-		}
-		if (!empty($outtime)) {
-			return self::with('UserList')
-							->with('AddressList')
-							->with('GoodsList')
-							->page($page,$pageSum)
-							->where($where)
-							->where('order_time','>',strtotime($outtime))
-							->select();
-		}
+		
+		return json_encode($data);
+	}
+
+	/**
+	 * [order 订单详情]
+	 * @return [type] [description]
+	 */
+	public static function orderDetails($id){
+		return self::with('UserList')
+							->with(['AddressList','GoodsList','KuaidiList'])
+							->where(['order_gid'=>$id])
+							->find();
 	}
 }

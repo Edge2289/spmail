@@ -13,41 +13,43 @@
     </div>
     <div class="x-body">
       <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="开始日" name="start" id="start">
-          <input class="layui-input" placeholder="截止日" name="end" id="end">
+        <form class="layui-form layui-col-md12 x-so" id="orderform">
+          <input class="layui-input" placeholder="开始日" name="starttime" id="starttime">
+          <input class="layui-input" placeholder="截止日" name="outtime" id="outtime">
           <div class="layui-input-inline">
-            <select name="paytype">
-              <option value="0">支付状态</option>
-              <option value="1">已支付</option>
-              <option value="2">未支付</option>
+            <select name="paystatus">
+              <option value="0" {if condition="$paystatus == 0"}selected="selected"{/if}>支付状态</option>
+              <option value="1" {if condition="$paystatus == 1"}selected="selected"{/if}>已支付</option>
+              <option value="2" {if condition="$paystatus == 2"}selected="selected"{/if}>未支付</option>
             </select>
           </div>
           <div class="layui-input-inline">
             <select name="paytype">
-              <option value="0">支付方式</option>
-              <option value="1">在线支付</option>
-              <option value="2">货到付款</option>
-              <option value="3">微信付款</option>
-              <option value="4">支付宝付款</option>
+              <option value="0" {if condition="$paytype == 0"}selected="selected"{/if}>支付方式</option>
+              <option value="1" {if condition="$paytype == 1"}selected="selected"{/if}>在线支付</option>
+              <option value="2" {if condition="$paytype == 2"}selected="selected"{/if}>货到付款</option>
+              <option value="3" {if condition="$paytype == 3"}selected="selected"{/if}>微信付款</option>
+              <option value="4" {if condition="$paytype == 4"}selected="selected"{/if}>支付宝付款</option>
             </select>
           </div>
           <div class="layui-input-inline">
             <select name="ordertype">
-              <option value="0">订单状态</option>
-              <option value="1">未付款</option>
-              <option value="2">待发货</option>
-              <option value="3">待确认收货</option>
-              <option value="4">已完成</option>
-              <option value="5">已取消</option>
+              <option value="0" {if condition="$ordertype == 0"}selected="selected"{/if}>订单状态</option>
+              <option value="1" {if condition="$ordertype == 1"}selected="selected"{/if}>未付款</option>
+              <option value="2" {if condition="$ordertype == 2"}selected="selected"{/if}>待发货</option>
+              <option value="3" {if condition="$ordertype == 3"}selected="selected"{/if}>待确认收货</option>
+              <option value="4" {if condition="$ordertype == 4"}selected="selected"{/if}>已完成</option>
+              <option value="5" {if condition="$ordertype == 5"}selected="selected"{/if}>已取消</option>
             </select>
           </div>
-          <input type="text" name="orderddh"  placeholder="请输入订单号" autocomplete="off" class="layui-input">
+          <input type="text" name="orderddh"  placeholder="请输入订单号" value="{$orderddh}" autocomplete="off" class="layui-input">
           <button class="layui-btn" lay-submit lay-filter="formDemo"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
-        <span class="layui-btn layui-bg-cyan" data-type="reload">共有数据：{$orderList|count} 条记录</span>
+        <span class="layui-btn layui-bg-cyan" style="float: right" data-type="reload">共有数据：{$orderList|count} 条记录</span>
+        <span class="layui-btn" data-type="reload">导出</span>
+
       </xblock>
     <table class="table table-bordered bg-white">
          <tbody>
@@ -139,27 +141,34 @@
                                             <span class="label label-success">{$ol["order_pay"]}</span>
                                             <?php }else if($ol['order_pay'] == '支付宝付款'){ ?>
                                             <span class="label label-primary">{$ol["order_pay"]}</span>
-                                            <?php }else{ ?>
+                                            <?php }else if($ol['order_pay'] == '未支付'){ ?>
                                             <span class="label label-danger">{$ol["order_pay"]}</span>
+                                            <?php }else if($ol['order_pay'] == '在线付款'){ ?>
+                                            <span class="label label-info">{$ol["order_pay"]}</span>
+                                            <?php }else{ ?>
+                                            <span class="label label-warning">{$ol["order_pay"]}</span>
                                         <?php } ?>
                                     </div>
                                 </td>
                                 <td class="order-tab-5" style="width: 11%">
 
                                     <div>
-                                        <a class="btn btn-primary btn-sm">详情</a>
+                                        <a onclick="orderDetails(this,{$ol['order_gid']})" class="btn btn-primary btn-sm">详情</a>
                                     </div>
-                                  <?php if($ol['order_status'] ==  '未付款'){ ?>
+                                        <?php if($ol['order_status'] ==  '未付款'){ ?>
                                             <div style="margin-top: 0.5rem;">
-                                              <a class="btn btn-danger btn-sm" >取消订单</a>
+                                              <a class="btn btn-danger btn-sm" onclick="orderCancel(this,{$ol['order_gid']})">取消订单</a>
                                             </div>
                                         <?php }else if($ol['order_status'] == '待发货'){ ?>
                                             <div style="margin-top: 0.5rem;">
-                                              <a class="btn btn-success btn-sm" href="">发货</a>
+                                              <a class="btn btn-success btn-sm" onclick="orderfahuo(this,{$ol['order_gid']})">发货</a>
+                                            </div>
+                                            <div style="margin-top: 0.5rem;">
+                                              <a class="btn btn-danger btn-sm" onclick="orderCancel(this,{$ol['order_gid']})">取消订单</a>
                                             </div>
                                         <?php }else if($ol['order_status'] == '待确认收货'){ ?>
                                             <div style="margin-top: 0.5rem;">
-                                              <a class="btn btn-info btn-sm" href="" style="background-color: #033c73; border: #033c73; ">物流</a>
+                                              <a class="btn btn-info btn-sm" onclick="orderfahuo(this,{$ol['order_gid']})" style="background-color: #033c73; border: #033c73; ">物流</a>
                                             </div>
                                         <?php }else if($ol['order_status'] == '已完成'){ ?>
                                             <div style="margin-top: 0.5rem;">
@@ -183,10 +192,10 @@
                                         <!--<a class="btn btn-sm btn-primary edit-address"
                                            data-index="#"
                                            data-order-type="store" href="javascript:">修改地址</a>-->
-                                         <span class=" badge badge-default" style="background-color: #2fa4e7;">申通</span>
+                                         <span class=" badge badge-default" style="background-color: #2fa4e7;">{$ol["kuaidi_list"]["name"]}</span>
                                         <span class="mr-3">
                                             <span class="titleColor">快递单号：</span>
-                                                <a href="javascript:void(0)" data-toggle="modal" onclick="express(this)" data-type="" data-value="123456" data-target="#expressModal">123456</a>
+                                                <a href="javascript:void(0)" data-value="{$ol["order_fahuo_wuliudh"]}" data-target="#expressModal">{$ol["order_fahuo_wuliudh"]}</a>
                                         </span>
                                         </div>
                                     <div>
@@ -199,58 +208,75 @@
                       {/volist}
 
 
-              <div class="page">
-                <div>
-                  <a class="prev" href="">&lt;&lt;</a>
-                  <a class="num" href="">1</a>
-                  <span class="current">2</span>
-                  <a class="num" href="">3</a>
-                  <a class="num" href="">489</a>
-                  <a class="next" href="">&gt;&gt;</a>
-                </div>
-              </div>
+              <div style="text-align: center;" id="goodsListPage">123456</div>
 
     </div>
     <script>
-      layui.use(['laydate','form'], function(){
+      layui.use(['laydate','laypage'], function(){
         var laydate = layui.laydate;
-        var form = layui.form;
+        var laypage = layui.laypage;
         
         //执行一个laydate实例
         laydate.render({
-          elem: '#start' //指定元素
+          elem: '#starttime' //指定元素
+          ,value: '{$starttime}'
         });
 
         //执行一个laydate实例
         laydate.render({
-          elem: '#end' //指定元素
+          elem: '#outtime' //指定元素
+          ,value: '{$outtime}'
         });
+
+          //执行一个laypage实例
+          laypage.render({
+            elem: 'goodsListPage' //注意，这里的 test1 是 ID，不用加 # 号
+            ,count: {$orderCount} //数据总数，从服务端得到
+            ,limit: {$pageSum}
+            ,layout: ['limit', 'prev', 'page', 'next']
+            ,limits: [10, 20, 30, 100]
+            ,pages: '<?php echo ceil($orderCount/$pageSum);?>' //总页数
+            ,curr: 10
+            ,jump: function (obj,first) {
+              if (!first) {
+            var pindex=obj.curr;
+            var dataList = $('#orderform').serialize();
+            window.location.href = "/admin/order/index?"+encodeURI(dataList)+"&page="+pindex+"&pageSum="+obj.limit;
+             }
+            }
+          });
       });
 
-       /*用户-停用*/
-      // function member_stop(obj,id){
-      //     layer.confirm('确认要停用吗？',function(index){
+      function orderDetails(obj, gid){
+        // obj,id='0',title='',url=''
+        var w = document.documentElement.clientWidth-50 > 1200 ? 1200 : document.documentElement.clientWidth-50;
+        var h = document.documentElement.clientHeight - 10 > 810 ? 810 : document.documentElement.clientHeight-10;
+        x_admin_show('订单详情','/admin/order/orderdetails'+"?id="+gid,w,h);
+      }
 
-      //         if($(obj).attr('title')=='启用'){
+      function orderfahuo(obj, gid){
+            x_admin_show('发货','/admin/order/orderfahuo'+"?id="+gid,500,300);
+      }
 
-      //           //发异步把用户状态进行更改
-      //           $(obj).attr('title','停用')
-      //           $(obj).find('i').html('&#xe62f;');
-
-      //           $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-      //           layer.msg('已停用!',{icon: 5,time:1000});
-
-      //         }else{
-      //           $(obj).attr('title','启用')
-      //           $(obj).find('i').html('&#xe601;');
-
-      //           $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-      //           layer.msg('已启用!',{icon: 5,time:1000});
-      //         }
-              
-      //     });
-      // }
-
+      function orderCancel(obj, gid){
+        var type = window.confirm("确定取消订单吗？");
+        if (!type) {
+          return false;
+        }
+          $.ajax({
+              'type' : 'post',
+              'url'  : '{:Url("order/orderCancel")}',
+              'data' : {'gid':gid},
+              'dataType' : 'json',
+              'async' : 'false',
+              success:function(data){
+                 alert(data['msg']);
+              },
+              error:function(){
+                console.log("请检查网络状态");
+              }
+          })
+      }
 
     </script>
 <style>
