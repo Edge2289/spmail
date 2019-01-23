@@ -16,7 +16,7 @@
                 'name' =>'订单管理',
                 'action'=>array(
                      'index'=>'订单列表',
-                     'edit_order'=>'批评管理',
+                     'edit_order'=>'评价管理',
          	      )
                ),        
               'admin/user'=>array(
@@ -27,7 +27,6 @@
                      'address'=>'收货地址',
                      'recharge'=>'充值记录',   
                      'withdrawals'=>'提现申请',     
-                     //'remittance'=>'汇款记录',       
                      'signList'=>'会员签到',          
          	      )
                ),        

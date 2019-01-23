@@ -5,12 +5,14 @@ use think\Model;
 use think\Db;
 
 use app\admin\model\User;
+use app\admin\model\GoodsPrice;
+
 
 /**
  * @Author: 小小
  * @Date:   2019-01-19 14:01:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-21 17:54:22
+ * @Last Modified time: 2019-01-22 16:42:28
  */
 class Order extends Model
 {
@@ -148,7 +150,7 @@ class Order extends Model
 	 */
 	public static function orderCancel($gid){
 		$order = self::get($gid);
-		$orderlist = $order->toArray();
+		$orderlist = $order->getData();
 		$data =  [];
 		if ($orderlist['order_status'] == 1 || $orderlist['order_status'] == 0) { 
 			/**
@@ -169,21 +171,37 @@ class Order extends Model
 			 *  支付宝支付
 			 */
 			Db::startTrans();
-
 			// 在线支付
-			if ($order->order_pay == 1) {
+			if ($orderlist['order_pay'] == 1) {
 				try{
-					$order->order_status = 5;
-					$order->save();
+					// 返还用户金额
 					$user = User::get($order['order_uid']);
 					$user->user_money = ($user->user_money+$order->order_price);
 					$user->save();
+					// 写入日志
+					$insert = [
+                        'user_id' => $user->user_id, 
+                        'user_money' => $order->order_price, 
+                        'change_time' => time(), 
+                        'desc' => "取消订单返还", 
+                        'order_sn' => $order->order_ddh, 
+                    ];
+                	$b = Db('shop_account_log')->insertGetId($insert);
+                	// 返还库存
+                	$type = GoodsPrice::addKC($orderlist["order_sid"],$orderlist["order_item"],$orderlist['order_num']);
+                	// 判断是否出错
+                	if (!$b || !$type) {
+                		throw new Exception("取消订单失败");
+                	}
+					// 改变订单状态
+					$order->order_status = 5;
+					$order->save();
 
+					Db::commit();
 					$data = [
 							'core' => 1,
 							'msg'  => '取消订单成功',
 						];
-					Db::commit();
 				}catch (\Excption $e){
 
 					Db::rollback();

@@ -8,12 +8,13 @@ use think\Request;
 use think\Cookie;
 use app\user\common\Base;
 use app\user\model\User;
+use app\user\model\Cat as CatModel;
 
 /**
  * @Author: 小小
  * @Date:   2018-12-19 11:28:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-19 13:48:12
+ * @Last Modified time: 2019-01-23 11:53:05
  */
 
 class Cat extends Base
@@ -47,17 +48,38 @@ class Cat extends Base
         $link_one = explode("_m_", implode(array_unique($i), "_m_"));
         	$userData = User::get(Session::get('user_id'))
     					->toArray();
+
+    	/****************/
+		$user_id = Session::get('user_id');
+		if(isset($user_id)){
+			$data = Db::table('shop_user')->where('user_id',$user_id)->find();
+			$lever = Db::table('shop_user_lever')->where('lever_id',$data['user_lever'])->find();
+			$this->assign([
+				'data' => $data,
+			    'user' => empty($data['user_nick'])?$data['user_moblie']:$data['user_nick'],
+			    'lever' => $lever["lever_name"],
+			]);
+		}
+    	/****************/
         $this->assign([
             'linka' => $linka,
             'link_one' => $link_one,
             'link' => $link,
             'userData' => $userData,
-            'dataCat' => json_decode(cookie::get('dataCat'),true),
+            'dataCat' => json_decode(Cookie::get('dataCat'),true),
         ]);
 	}
 
 
 	public function index(){
+		$userId = Session::get('user_id');
+		dd(json_decode(cookie::get('dataCat'),true));
+		
+		if (!empty($userId)) {
+			$catList = CatModel::get(['user_id'=>$userId]);
+			print_r($catList);
+		}
+			// dd(12);
 		 $this->assign([
             'dataCat' => json_decode(cookie::get('dataCat'),true),
         ]);
@@ -69,9 +91,15 @@ class Cat extends Base
 	 */
 	public function cookieCat(Request $request){
 		$dataCat = json_decode(input('post.dataCat'),true);
-		// Cookie::delete('dataCat');
+
+		$userId = Session::get('user_id');
+		if (!empty($userId)) {
+			$catList = CatModel::addData($dataCat);
+			return json_encode($catList);
+		}
+
 		/**
-		 * [$dataCookieCat 比较cookie里面得购物车]
+		 * [$dataCookieCat 比较cookie里面得购物车] 保存到cookie
 		 * @var [type]
 		 */
 		$dataCookieCat = json_decode(cookie::get('dataCat'),true);

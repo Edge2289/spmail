@@ -271,6 +271,9 @@
               'async' : 'false',
               success:function(data){
                  alert(data['msg']);
+                 if (data['core'] == 1) {
+                    location.replace(location.href);
+                 }
               },
               error:function(){
                 console.log("请检查网络状态");

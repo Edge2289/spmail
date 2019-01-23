@@ -31,4 +31,5 @@ return [
     'index/RedisterClass/email_register'=>'index/RedisterClass/email_register',
     'index/Search/index.html/:id'=>'index/Search/index',
     'index/Search/index/:id'=>'index/Search/index',
+    'index/Search/index/'=>'index/Search/index',
 ];

@@ -18,16 +18,27 @@ use app\common\api\wxpay\Wxpay;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-19 14:57:38
+ * @Last Modified time: 2019-01-22 18:01:46
  */
 
 class Pay extends Base
 {
     public function _initialize(){
 
-        // if (empty(Session::get('user_id'))) {
-        //     dd('_empty');
-        // }
+
+            $user_id = Session::get('user_id');
+            if(isset($user_id)){
+                $data = Db::table('shop_user')->where('user_id',$user_id)->find();
+                $lever = Db::table('shop_user_lever')->where('lever_id',$data['user_lever'])->find();
+                $this->assign([
+                    'data' => $data,
+                    'user' => empty($data['user_nick'])?$data['user_moblie']:$data['user_nick'],
+                    'lever' => $lever["lever_name"],
+                    ]);
+            }
+       /**
+        * 
+        */
         parent::_initialize();
          $redis = $this->redisConfig();
          //去友情链接

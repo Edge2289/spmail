@@ -1,21 +1,41 @@
 <?php
 namespace app\index\controller;
 
-use app\index\common\Base;
-use app\index\common\G_Logic;
+use think\Db;
+use think\Cookie;
 use think\Session;
 use app\user\controller;
-use think\Db;
+use app\index\common\Base;
+use app\index\common\G_Logic;
 
 //前台商品显示 .class.php
 
 class Search extends Base
 {
+
+    public function _initialize(){
+        
+        $user_id = Session::get('user_id');
+        if(isset($user_id)){
+            $data = Db::table('shop_user')->where('user_id',$user_id)->find();
+            $lever = Db::table('shop_user_lever')->where('lever_id',$data['user_lever'])->find();
+            $this->assign([
+                'data' => $data,
+                'user' => empty($data['user_nick'])?$data['user_moblie']:$data['user_nick'],
+                'lever' => $lever["lever_name"],
+                ]);
+        }
+        $this->assign([
+            'dataCat' => json_decode(Cookie::get('dataCat'),true),
+        ]);
+    }
+
+
 	//显示index
     public function index($id = 0)
     {
     	$link = $_SERVER['QUERY_STRING'];
-		$sele = G_Logic::goodsList($id,$link);  // 返回商品类 -> 规格
+		$sele = G_Logic::goodsList($id,$link,input('get.kw'));  // 返回商品类 -> 规格
 		$navhtml = G_Logic::navigation($id);  // 返回导航栏
 
        $this->linkbutton();

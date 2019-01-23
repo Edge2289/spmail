@@ -8,14 +8,13 @@ use think\DB;
 */
 class G_Logic
 {
-	public static function goodsList($id, $data, $info = 0)
+	public static function goodsList($id, $data, $info = '')
 	{
 		$p_sp = [];
 		$p_sp_it = [];
 		$p_br = [];
 		$p_c_s = [];
 		$ht1 = '';
-
 		$in = Db('shop_goods_category')->where('cate_id',$id)->field('parent_id_path')->find();
 		$i = array(array());
 		if ($data != '' || count($data) == 0) {
@@ -25,7 +24,7 @@ class G_Logic
 	    		$i[$key][$b[0]] = $b[1];
 			}
 		}
-		$p = DB::query('call G_count("cat_id","'.$in['parent_id_path'].'","0","0")');
+		$p = DB::query('call G_count("cat_id","'.$in['parent_id_path'].'","'.$info.'","0")');
 		foreach ($p as $va) {
 			foreach ($va as $key => $value) {
 				$p_sp[$key] = $value["speclist_name"]; // 品牌
@@ -74,40 +73,8 @@ class G_Logic
 				}
 				$ht1 .= '</div></dl></li>';
 			}
-		// 	if (!empty($lk[0][0])) {
-		// 		foreach ($lk as $val) {
-		// 			$ht1 = $ht1.'<li class="select-list">
-		// 									<dl id="select1">
-		// 										<dt class="am-badge am-round am-bc">'.$val[0][0]['speclist_name'].'</dt>	
-		// 										 <div class="dd-conent">';
-		// 			foreach ($val[0] as $va) {
-		// 				$ht1 .= '<dd><a href="#">'.$va["item_count"].'</a></dd>';
-		// 			}
-		// 			$ht1 .=' </div></dl></li>';
-		// 		}
-		// 			$ht1 = '<ul class="select">'.$ht1.'</ul>';
-		// 	}
-		// }
-		// var_dump($p[0]);
-		// die;
 		$data["ht1"] = $ht1 = '<ul class="select">'.$ht1.'</ul>';
 		$data["d"] = empty($p[0])?'':$p[0];
-		/*
-		 						<li class="select-list">
-									<dl id="select1">
-										<dt class="am-badge am-round am-bc">品牌</dt>	
-										 <div class="dd-conent">										
-											<dd><a href="#">百草味</a></dd>
-											<dd><a href="#">良品铺子</a></dd>
-											<dd><a href="#">新农哥</a></dd>
-											<dd><a href="#">楼兰蜜语</a></dd>
-											<dd><a href="#">口水娃</a></dd>
-											<dd><a href="#">考拉兄弟</a></dd>
-										 </div>
-						
-									</dl>
-								</li>
-							*/
 		return $data;
 	}
 

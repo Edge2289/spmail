@@ -21,6 +21,16 @@ use think\Db;
 class Index extends Base
 {
     public function _initialize(){
+        
+        $user_id = Session::get('user_id');
+        if(isset($user_id)){
+            $data = Db::table('shop_user')->where('user_id',$user_id)->select();
+            $lever = Db::table('shop_user_lever')->where('lever_id',$data[0]['user_lever'])->select();
+            $this->assign([
+                'data' => $data[0],
+                'lever' => $lever[0]["lever_name"],
+                ]);
+        }
         $this->assign([
             'dataCat' => json_decode(Cookie::get('dataCat'),true),
         ]);
@@ -100,14 +110,6 @@ class Index extends Base
         }
         $link_one = explode("_m_", implode(array_unique($i), "_m_"));
 
-        if(isset($user)){
-            $data = Db::table('shop_user')->where('user_id',$user_id)->select();
-            $lever = Db::table('shop_user_lever')->where('lever_id',$data[0]['user_lever'])->select();
-            $this->assign([
-                'data' => $data[0],
-                'lever' => $lever[0]["lever_name"],
-                ]);
-        }
 
         /********************* * 交互区 * ***********************************/
           

@@ -14,7 +14,6 @@ use think\Session;
 class Base extends Controller
 {
 
-
 // redis 示例话
     public function redisConfig()
     {
