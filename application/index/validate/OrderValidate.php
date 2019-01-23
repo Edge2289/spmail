@@ -5,7 +5,7 @@ use think\Validate;
  * @Author: 小小
  * @Date:   2019-01-15 11:37:29
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-15 14:34:07
+ * @Last Modified time: 2019-01-23 17:46:33
  */
 class OrderValidate extends Validate
 {
@@ -39,6 +39,6 @@ class OrderValidate extends Validate
 		];
 	protected $scene = [
 			'qita' => ['liuyan','pay','address','time'], // __token__
-			'goods'=> ['goodsNum','goodsid','itemId'],
+			'goods'=> ['goodsNum','goodsid'],
 		];
 }

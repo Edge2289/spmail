@@ -6,7 +6,7 @@ use think\Validate;
  * @Author: 小小
  * @Date:   2019-01-04 11:01:50
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-15 13:21:37
+ * @Last Modified time: 2019-01-23 17:19:41
  */
 
 class PayValidate extends Validate
@@ -14,7 +14,7 @@ class PayValidate extends Validate
 	// 验证的数据
 	protected $rule = [
 			'__token__'=>'require|token', //这里__token__不能去改.
-			'type' => 'require', // alphaDash  token
+			// 'type' => 'require', // alphaDash  token
 			'num' => 'require|number|integer',
 			'id' => 'require|number|integer',
 			'store_count' => 'require|number|integer',
@@ -22,7 +22,7 @@ class PayValidate extends Validate
 
 	// 验证的返回信息
 	protected $message = [
-			'type.require' => '参数类型错误，请重新提交0',
+			// 'type.require' => '参数类型错误，请重新提交0',
 			// 'type.token' => '请不要重复提交',
 			'num.require' => '参数类型错误，请重新提交1',
 			'num.number' => '参数类型错误，请重新提交2',

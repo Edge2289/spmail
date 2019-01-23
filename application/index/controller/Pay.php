@@ -18,7 +18,7 @@ use app\common\api\wxpay\Wxpay;
  * @Author: 小小
  * @Date:   2018-12-29 15:38:19
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-22 18:01:46
+ * @Last Modified time: 2019-01-23 17:31:35
  */
 
 class Pay extends Base
@@ -148,6 +148,7 @@ class Pay extends Base
             return "参数有误！";
         }
         for ($i=0; $i < count($commit); $i++) { 
+            // dd($commit);
             $validate = Loader::validate('PayValidate');
             if (!$validate->scene('count')->check($commit[$i])) {
                 dd($validate->getError());
@@ -186,6 +187,11 @@ class Pay extends Base
        $pay = Db::table('shop_pay')->where('static',0)->field('id,pay_name,pay_img')->select();
         /*****************************************************************/
         $this->linkbutton();
+        for ($i=0; $i < count($goodsData); $i++) { 
+            $goodsData[$i]['item']['item_name'] = empty($goodsData[$i]['item']['item_name'])?'':$goodsData[$i]['item']['item_name'];
+            $goodsData[$i]['item']['price'] = empty($goodsData[$i]['item']['price'])?$goodsData[$i]['goods']['shop_price']:$goodsData[$i]['item']['price'];
+        }
+        // dd($goodsData);
         $this->assign([
                 'userAdd' => $userAdd,
                 'kuaidi' => $kuaidi,

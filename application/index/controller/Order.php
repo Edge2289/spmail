@@ -54,14 +54,12 @@ class Order extends Base
 			}
 			$orderLisr[$key] = $value;
 		}
-		// dd($orderLisr);
 		// 判断其他信息
 		$goodsOrQt = Loader::validate('OrderValidate');
 			if (!$goodsOrQt->scene('qita')->check($orderLisr)) {
 				$data['status'] = 0;
 	            $data['msg'] = $goodsOrQt->getError();
 	            $data['data'] = '';
-	            dd($goodsOrQt->getError());
 	            return json_encode($data);
 			}
 		// 判断商品是否可用之类
@@ -78,7 +76,6 @@ class Order extends Base
 				$data['status'] = 0;
 	            $data['msg'] = $goodsOrVa->getError();
 	            $data['data'] = '';
-	            dd($goodsOrVa->getError());
 	            return json_encode($data);
 			}
 		}

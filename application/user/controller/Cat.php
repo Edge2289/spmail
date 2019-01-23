@@ -14,7 +14,7 @@ use app\user\model\Cat as CatModel;
  * @Author: 小小
  * @Date:   2018-12-19 11:28:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-23 11:53:05
+ * @Last Modified time: 2019-01-23 16:49:50
  */
 
 class Cat extends Base
@@ -73,15 +73,25 @@ class Cat extends Base
 
 	public function index(){
 		$userId = Session::get('user_id');
-		dd(json_decode(cookie::get('dataCat'),true));
-		
+
 		if (!empty($userId)) {
-			$catList = CatModel::get(['user_id'=>$userId]);
-			print_r($catList);
+			$data = json_decode(cookie::get('dataCat'),true);
+			for ($i=0; $i < count($data); $i++) { 
+				CatModel::addData($data[$i]);
+			}
+			Cookie::delete('dataCat');
+			$catList = CatModel::where(['user_id'=>$userId])->select();
+			$dataCat = $catList->toArray();
+			for ($e=0; $e < count($dataCat); $e++) { 
+				$dataCat[$e]['catSpeclist'] = json_decode($dataCat[$e]['catSpeclist'],true);
+				$dataCat[$e]['itemSpeclist'] = json_decode($dataCat[$e]['itemSpeclist'],true);
+				$dataCat[$e]['specListText'] = json_decode($dataCat[$e]['specListText'],true);
+			}
+		}else{
+			$dataCat = json_decode(cookie::get('dataCat'),true);
 		}
-			// dd(12);
 		 $this->assign([
-            'dataCat' => json_decode(cookie::get('dataCat'),true),
+            'dataCat' => $dataCat,
         ]);
 		return $this->fetch();
 	}

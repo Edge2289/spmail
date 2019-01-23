@@ -12,7 +12,7 @@ use app\admin\model\GoodsPrice;
  * @Author: 小小
  * @Date:   2019-01-19 14:01:06
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-22 16:42:28
+ * @Last Modified time: 2019-01-23 17:48:19
  */
 class Order extends Model
 {
@@ -88,6 +88,7 @@ class Order extends Model
 								->page($data['page'],$data['pageSum'])
 								->where($where)
 								->where('order_status','<>',1)
+								->order('order_gid desc')
 								->select();
 			}
 		return self::with('UserList')
@@ -96,6 +97,7 @@ class Order extends Model
 							->where($where)
 							->where('order_time','>',strtotime($data['starttime']))
 							->where('order_time','<',strtotime($data['outtime']))
+							->order('order_gid desc')
 							->select();
 	}
 

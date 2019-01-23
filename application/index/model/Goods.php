@@ -9,7 +9,7 @@ use app\index\model\Goods_cate;
  * @Author: 小小
  * @Date:   2018-12-20 14:21:21
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-15 15:13:39
+ * @Last Modified time: 2019-01-23 17:45:58
  */
 
 class Goods extends Model
@@ -194,33 +194,48 @@ class Goods extends Model
 			// 解析前端过来的数据做数组对比
 			$dataItem = explode(',', $data['itemId']);
 			$item = array();
-			foreach ($dataItem as $key => $value) {
-				$v1 = explode('_', $value);
-				$item[$key] = $v1[1];
-			}
-			// 对比数组
-			foreach ($dataArr as $key => $value) {
-				if (empty(array_diff(explode('_',$value['item_id']),$item))) {
-					if ($value['store_count'] >= $data['goodsNum']) {
-						$reList['price'] = $value['price'];
-						$reList['item_name'] = $value['item_name'];
-						$reList['item_id'] = $value['item_id'];
-						$reList['goodsid'] = $data['goodsid'];
-						$reList['goodsnum'] = $data['goodsNum'];
-						$reData = [
-							'status' => 1,
-							'msg'    => "",
-							'data'   => $reList,
-						];
-					}else{
-						// 库存不足
-						$reData = [
-							'status' => 0,
-							'msg'    => "商品库存不足",
-							'data'   => $reList,
-						];
+			if (empty($dataItem)) {
+					foreach ($dataItem as $key => $value) {
+						$v1 = explode('_', $value);
+						$item[$key] = $v1[1];
 					}
-				}
+					// 对比数组
+					foreach ($dataArr as $key => $value) {
+						if (empty(array_diff(explode('_',$value['item_id']),$item))) {
+							if ($value['store_count'] >= $data['goodsNum']) {
+								$reList['price'] = $value['price'];
+								$reList['item_name'] = $value['item_name'];
+								$reList['item_id'] = $value['item_id'];
+								$reList['goodsid'] = $data['goodsid'];
+								$reList['goodsnum'] = $data['goodsNum'];
+								$reData = [
+									'status' => 1,
+									'msg'    => "",
+									'data'   => $reList,
+								];
+							}else{
+								// 库存不足
+								$reData = [
+									'status' => 0,
+									'msg'    => "商品库存不足",
+									'data'   => $reList,
+								];
+							}
+						}
+					}
+			}else{
+				$goodsList = self::get(['goods_id'=>$data['goodsid']]);
+				$goodsList = $goodsList->toArray();
+				$reList['price'] = $goodsList['shop_price'];
+				$reList['item_name'] = '';
+				$reList['item_id'] = '';
+				$reList['goodsid'] = $data['goodsid'];
+				$reList['goodsnum'] = $data['goodsNum'];
+				$reData = [
+						'status' => 1,
+						'msg'    => "",
+						'data'   => $reList,
+					];
 			}
 		}else{
 			$reData = [
