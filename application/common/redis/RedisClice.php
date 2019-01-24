@@ -415,6 +415,9 @@ class RedisClice{
         return $re;
     }
 
+    public function setnx($key, $time){
+        return $this->redisObj[$this->sn] -> setnx($key, $time);
+    }
 
 
     /*------------------------------------end hash结构----------------------------------------------------*/
@@ -540,6 +543,7 @@ class RedisClice{
     {
         $this->redisObj[$this->sn]->close();
     }
+
 
     /**
      * 魔术方法 有不存在的操作的时候执行

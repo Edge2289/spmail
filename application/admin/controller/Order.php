@@ -12,7 +12,7 @@ use app\admin\model\Order as OrderModel;
  * @Author: 小小
  * @Date:   2019-01-19 14:13:40
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-21 17:52:54
+ * @Last Modified time: 2019-01-24 09:44:44
  */
 class Order extends Base
 {
@@ -26,7 +26,7 @@ class Order extends Base
 		$data['ordertype'] = empty(input('get.ordertype'))?0:input('get.ordertype'); // 订单方式
 		$data['orderddh'] = empty(input('get.orderddh'))?'':input('get.orderddh'); // 订单号
 		$data['starttime'] = empty(input('get.starttime'))?'':input('get.starttime'); // 开启时间
-		$data['outtime'] = empty(input('get.outtime'))?date("Y-m-d",time()):input('get.outtime'); // 结束时间
+		$data['outtime'] = empty(input('get.outtime'))?date("Y-m-d"." 23:59:59"):input('get.outtime'); // 结束时间
 		$order = Loader::Validate('OrderValidate');
 		if (!$order->check($data)) {
 			dd($order->getError());

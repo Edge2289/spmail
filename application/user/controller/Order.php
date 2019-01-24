@@ -12,7 +12,7 @@ use app\user\model\Order as OrderModel;
  * @Author: 小小
  * @Date:   2019-01-18 15:50:26
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-18 17:47:22
+ * @Last Modified time: 2019-01-24 16:22:17
  */
 class Order extends Base
 {
@@ -62,6 +62,11 @@ class Order extends Base
 	 * @return [type] [description]
 	 */
 	public function order(){
+        $orderList = OrderModel::userOrder(Session::get('user_id'));
+        // dd($orderList);
+        $this->assign([
+                'orderList' => $orderList,
+            ]);
     	return $this->fetch();
 	}
 
@@ -80,5 +85,20 @@ class Order extends Base
 	public function comment(){
     	return $this->fetch();
 	}
+
+    /**
+     * [orderinfo 订单详情]
+     * @return [type] [description]
+     */
+    public function orderinfo(){
+        $ddh = input('get.ddh');
+        $orderList = OrderModel::userOrderInfo($ddh);
+        if (empty($orderList) || $orderList == 0 || empty($orderList[0]['order_ddh'])) {
+            dd("有错");
+        }
+        // dd($orderList);
+        $this->assign('orderList',$orderList);
+        return $this->fetch();
+    }
 
 }

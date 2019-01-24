@@ -9,6 +9,8 @@ use app\user\common\Base;
 use app\user\model\User;
 use app\user\model\Order;
 
+use app\common\redis\RedisLock;
+
 class Index extends Base
 {
 	public function _initialize()
@@ -184,5 +186,19 @@ class Index extends Base
     	return $this->fetch();
     }
 
+    public function lock(){
+        $redislock = new RedisLock();
+        $is_lock = $redislock->lock('goodslock',30,0);
+        if ($is_lock) {
+            echo "获取锁成功";
+            sleep(1);
+            // 删除锁
+            $redislock->unlock('goodslock');
+        }
+        else{
+            echo "获取锁失败";
+            // $redislock->unlock('goodslock');
+        }
+    }
 
 }
