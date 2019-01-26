@@ -8,11 +8,17 @@ use app\user\model\Goods;
  * @Author: 小小
  * @Date:   2019-01-18 14:29:59
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-24 16:22:56
+ * @Last Modified time: 2019-01-26 14:56:36
  */
 class Order extends Model
 {
 	protected $table = "shop_order";
+
+    // protected function getOrderStatusAttr($status){
+    //     // 1=未付款,2=待发货,3=待确认收货,4=已完成,5=已取消
+    //     $type = [1=>'未付款',2=>'待发货',3=>'待确认收货',4=>'已完成',5=>'已取消'];
+    //     return $type[$status];
+    // }
 
 	public function items(){
 		// 一对一关联

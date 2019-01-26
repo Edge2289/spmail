@@ -8,6 +8,8 @@ use think\Db;
 use app\user\common\Base;
 use app\user\model\User;
 use app\user\model\Order;
+use app\user\model\Address;
+use app\user\model\Area;
 
 use app\common\redis\RedisLock;
 
@@ -135,7 +137,24 @@ class Index extends Base
      * @return [type] [description]
      */
     public function address(){
+        $addressList = Address::where(['user_id'=>Session::get('user_id')])->select()->toArray();
+        $item = Area::field('Id,Name,ParentId')->select()->toArray();
+        $this->assign([
+                'AdrList' => $addressList,
+                'item' => $item
+            ]);
+        // dd($item);
     	return $this->fetch();
+    }
+
+    public function addressMl(){
+        $data = $this->request->param();
+        $addVa = loader::Validate('AddressValidate');
+        if (!$addVa->check($data)) {
+            dd($addVa->getError());
+        }
+        
+        dd($data);
     }
 
     /**

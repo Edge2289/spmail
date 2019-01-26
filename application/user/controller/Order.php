@@ -12,7 +12,7 @@ use app\user\model\Order as OrderModel;
  * @Author: 小小
  * @Date:   2019-01-18 15:50:26
  * @Last Modified by:   小小
- * @Last Modified time: 2019-01-24 16:22:17
+ * @Last Modified time: 2019-01-26 14:56:43
  */
 class Order extends Base
 {
@@ -63,7 +63,6 @@ class Order extends Base
 	 */
 	public function order(){
         $orderList = OrderModel::userOrder(Session::get('user_id'));
-        // dd($orderList);
         $this->assign([
                 'orderList' => $orderList,
             ]);
