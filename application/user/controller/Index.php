@@ -1,10 +1,12 @@
 <?php
 namespace app\user\controller;
 
-use think\Cache;
-use think\Session;
-use think\Cookie;
 use think\Db;
+use think\Cache;
+use think\Cookie;
+use think\Loader;
+use think\Session;
+use think\Request;
 use app\user\common\Base;
 use app\user\model\User;
 use app\user\model\Order;
@@ -121,7 +123,28 @@ class Index extends Base
      * @return [type] [description]
      */
     public function information(){
+        $userData = User::get(Session::get('user_id'))
+                            ->toArray();
+        $userData['user_birthday'] = explode('_', $userData['user_birthday']);        
+        $this->assign(['userData' => $userData]);
+        // dd($userData);
     	return $this->fetch();
+    }
+
+    /**
+     * [editInf 个人资料修改]
+     * @return [type] [description]
+     */
+    public function editInf(Request $request){
+        $data = $request->param();
+        $reData['core'] = 0;
+        $reData['msg'] = '';
+        $infval = Loader::Validate('UserValidate');
+        if (!$infval->check($data)) {
+            $reData['msg'] = $infval->getError();
+            return $reData;
+        }
+        return User::UserEdit($data);
     }
 
     /**
